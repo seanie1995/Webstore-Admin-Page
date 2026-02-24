@@ -21,14 +21,11 @@ export const FetchAllProducts = async (
     _expand: "category",
   });
 
-  const baseUrl = `${API_URL}/products/?${params}`;
-
-  console.log(baseUrl);
+  const baseUrl = `${API_URL}/products?${params}`;
 
   const data = await fetch(baseUrl, {
     headers: {
       "Content-Type": "application/json",
-      // Add other required headers
     },
   }).then((res) => res.json());
 
@@ -43,15 +40,15 @@ export const FetchSingleProductById = async (id: string) => {
   return data;
 };
 
-/*  const requiredFields = [
-      "title",
-      "price",
-      "description",
-      "thumbnail",
-      "categoryId",
-      "brand",
-    ];
- */
+/*  
+    "title",
+    "price",
+    "description",
+    "thumbnail",
+    "categoryId",
+    "brand",
+*/
+
 export const CreateProduct = async (formData: FormData) => {
   const title = formData.get("title") as string;
   const price = formData.get("price") as string;
