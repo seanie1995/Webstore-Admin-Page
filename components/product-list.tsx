@@ -1,6 +1,7 @@
 import React from "react";
 import { Trash2, SquarePen } from "lucide-react";
 import { FetchAllProducts } from "@/lib/actions";
+import LimitSelector from "./filter-components/limit-select";
 
 const ProductList = async ({
   searchParams,
@@ -30,6 +31,7 @@ const ProductList = async ({
 
   return (
     <>
+      <LimitSelector />
       <table className="w-full rounded-2xl  border-neutral-400 border">
         <thead className="bg-neutral-100">
           <tr className=" text-sm text-neutral-600">
@@ -47,7 +49,7 @@ const ProductList = async ({
               <td className="text-left py-4 px-4">
                 <div>
                   <div className="font-bold">{product.title}</div>
-                  {/*  <div className=" text-gray-500">{product.id}</div> */}
+                  <div className=" text-gray-500">{product.id}</div>
                 </div>
               </td>
               <td className="text-center ">{product.category?.name}</td>
