@@ -2,6 +2,7 @@ import React from "react";
 import { Trash2, SquarePen } from "lucide-react";
 import { FetchAllProducts } from "@/lib/actions";
 import LimitSelector from "./filter-components/limit-select";
+import Link from "next/link";
 
 const ProductList = async ({
   searchParams,
@@ -9,7 +10,7 @@ const ProductList = async ({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
   const {
-    limit = "10",
+    limit = "6",
     order = "asc",
     page = "1",
     orderBy = "id",
@@ -62,7 +63,10 @@ const ProductList = async ({
               </td>
               <td className="px-4">
                 <div className="flex flex-row justify-end gap-4">
-                  <SquarePen className="text-purple-700" />
+                  <Link href={"/edit-page"}>
+                    <SquarePen className="text-purple-700" />
+                  </Link>
+
                   <Trash2 className="text-red-600" />
                 </div>
               </td>
