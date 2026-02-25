@@ -2,6 +2,7 @@ import React from "react";
 import { Trash2, SquarePen } from "lucide-react";
 import { FetchAllProducts } from "@/lib/actions";
 import LimitSelector from "./filter-components/limit-select";
+import Pagination from "./filter-components/pagination";
 import Link from "next/link";
 
 const ProductList = async ({
@@ -29,6 +30,7 @@ const ProductList = async ({
   );
 
   const allProducts = res.products;
+  const totalPages = res.pages;
 
   return (
     <>
@@ -74,6 +76,7 @@ const ProductList = async ({
           ))}
         </tbody>
       </table>
+      <Pagination totalPages={totalPages} />
     </>
   );
 };
