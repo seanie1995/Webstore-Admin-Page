@@ -23,7 +23,7 @@ const LimitSelector = () => {
   };
 
   return (
-    <form className="flex items-center gap-2 p-6">
+    <form className="flex items-center gap-2 ">
       <label
         htmlFor="limit-select"
         className="text-sm font-medium text-gray-700"

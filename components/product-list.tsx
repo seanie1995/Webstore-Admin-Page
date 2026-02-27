@@ -1,9 +1,11 @@
 import React from "react";
 import { Trash2, SquarePen } from "lucide-react";
-import { FetchAllProducts } from "@/lib/actions";
+import { FetchAllCategories, FetchAllProducts } from "@/lib/actions";
 import LimitSelector from "./filter-components/limit-select";
 import Pagination from "./filter-components/pagination";
 import Link from "next/link";
+import CategorySelect from "./filter-components/category-select";
+import SearchBar from "./filter-components/search-bar";
 
 const ProductList = async ({
   searchParams,
@@ -15,26 +17,39 @@ const ProductList = async ({
     order = "asc",
     page = "1",
     orderBy = "id",
+    title_like = "",
+    categoryId = "",
   } = await searchParams;
 
   const currentLimit = Number(Array.isArray(limit) ? limit[0] : limit);
   const currentOrder = Array.isArray(order) ? order[0] : order;
   const currentPage = Number(Array.isArray(page) ? page[0] : page);
   const currentSort = Array.isArray(orderBy) ? orderBy[0] : orderBy;
+  const currentQuery = Array.isArray(title_like) ? title_like[0] : title_like;
+  const chosenCategory = Array.isArray(categoryId) ? categoryId[0] : categoryId;
 
   const res = await FetchAllProducts(
     currentLimit,
     currentPage,
     currentSort,
     currentOrder,
+    currentQuery,
+    chosenCategory,
   );
+
+  const categories = await FetchAllCategories();
 
   const allProducts = res.products;
   const totalPages = res.pages;
 
   return (
     <>
-      <LimitSelector />
+      <div className="p-6 flex flex-row gap-4">
+        <LimitSelector />
+        <SearchBar />
+        <CategorySelect categories={categories} />
+      </div>
+
       <table className="w-full rounded-2xl  border-neutral-400 border">
         <thead className="bg-neutral-100">
           <tr className=" text-sm text-neutral-600">

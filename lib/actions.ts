@@ -5,21 +5,32 @@ import { redirect } from "next/navigation";
 import { API_URL } from "./config";
 import { Product, ProductsResponse } from "@/app/types";
 
+export const FetchAllCategories = async () => {
+  const data = await fetch(`${API_URL}/categories`).then((res) => res.json());
+
+  return data;
+};
+
 export const FetchAllProducts = async (
   limit = 6,
   page = 1,
   sort = "id",
   order = "asc",
   query = "",
+  categoryId = "",
 ): Promise<ProductsResponse> => {
   const params = new URLSearchParams({
     _limit: limit.toString(),
     _sort: sort,
     _page: page.toString(),
     _order: order,
-    _query: query,
+    title_like: query,
     _expand: "category",
   });
+
+  if (categoryId) {
+    params.set("categoryId", categoryId);
+  }
 
   const baseUrl = `${API_URL}/products?${params}`;
 
