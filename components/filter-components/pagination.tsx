@@ -39,12 +39,14 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
       </span>
       <div className="flex gap-4">
         <Link
+          scroll={false}
           href={createPageUrl(1)}
           className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all ${currentPage === 1 ? "pointer-events-none text-gray-400 cursor-not-allowed" : ""}`}
         >
           First
         </Link>
         <Link
+          scroll={false}
           href={createPageUrl(currentPage - 1)}
           className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all ${currentPage === 1 ? "pointer-events-none text-gray-400 cursor-not-allowed" : ""}`}
         >
@@ -52,6 +54,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
         </Link>
         {paginationDisplay.map((i, index) => (
           <Link
+            scroll={false}
             className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all `}
             href={createPageUrl(i.toString())}
             key={index}
@@ -61,6 +64,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
         ))}
         {currentPage === totalPages && (
           <Link
+            scroll={false}
             href={createPageUrl(totalPages)}
             className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all ${currentPage === totalPages ? "pointer-events-none text-gray-400 cursor-not-allowed" : ""}`}
           >
@@ -68,6 +72,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
           </Link>
         )}
         <Link
+          scroll={false}
           href={createPageUrl(currentPage + 1)}
           className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all ${currentPage === totalPages ? "pointer-events-none text-gray-400 cursor-not-allowed" : ""}`}
         >
@@ -75,6 +80,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
           Next
         </Link>
         <Link
+          scroll={false}
           href={createPageUrl(totalPages)}
           className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all ${currentPage === totalPages ? "pointer-events-none text-gray-400 cursor-not-allowed" : ""}`}
         >
