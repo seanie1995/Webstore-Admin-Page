@@ -1,9 +1,8 @@
-import { FetchAllProducts, FetchSingleProductById } from "@/lib/actions";
-import type { ProductsResponse } from "./types";
 import ProductList from "@/components/product-list";
 import SideBar from "@/components/sidebar";
+import React from "react";
 
-export default async function Home(params: PageProps<"/">) {
+const Products = (params: PageProps<"/">) => {
   return (
     <main className="">
       <section>
@@ -11,4 +10,6 @@ export default async function Home(params: PageProps<"/">) {
       </section>
     </main>
   );
-}
+};
+
+export default Products;
