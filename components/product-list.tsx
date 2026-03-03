@@ -58,7 +58,7 @@ const ProductList = async ({
             <th>Price</th>
             <th>Stock</th>
             <th>Status</th>
-            <th className="">Actions</th>
+            <th className="w-[10%]">Actions</th>
           </tr>
         </thead>
         <tbody>
