@@ -11,14 +11,18 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
 
   const currentPage = Number(searchParams.get("page")) || 1;
 
-  const startPage = Math.max(1, currentPage - 1);
-  const endPage = Math.min(totalPages, currentPage + 1);
+  const startPage = currentPage + 1;
+  const endPage = Math.min(totalPages, currentPage + 3);
 
-  const paginationDisplay: Number[] = [];
+  const paginationDisplay: number[] = [];
 
   for (let i = startPage; i <= endPage; i++) {
     paginationDisplay.push(i);
   }
+
+  /*   for (let i = startPage; i <= endPage; i++) {
+    paginationDisplay.push(i);
+  } */
 
   const createPageUrl = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -48,13 +52,21 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
         </Link>
         {paginationDisplay.map((i, index) => (
           <Link
-            className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all ${i === currentPage ? "pointer-events-none text-gray-400 cursor-not-allowed" : ""}`}
+            className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all `}
             href={createPageUrl(i.toString())}
             key={index}
           >
             {i.toString()}
           </Link>
         ))}
+        {currentPage === totalPages && (
+          <Link
+            href={createPageUrl(totalPages)}
+            className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all ${currentPage === totalPages ? "pointer-events-none text-gray-400 cursor-not-allowed" : ""}`}
+          >
+            {currentPage}
+          </Link>
+        )}
         <Link
           href={createPageUrl(currentPage + 1)}
           className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all ${currentPage === totalPages ? "pointer-events-none text-gray-400 cursor-not-allowed" : ""}`}
