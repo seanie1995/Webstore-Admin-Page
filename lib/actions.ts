@@ -12,7 +12,7 @@ export const FetchAllCategories = async () => {
 };
 
 export const FetchAllProducts = async (
-  limit = 6,
+  limit = 6 ,
   page = 1,
   sort = "id",
   order = "asc",
