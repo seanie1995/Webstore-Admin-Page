@@ -53,3 +53,26 @@ export interface ProductsResponse {
   page: number;
   pages: number;
 }
+
+export interface Customer {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  address: string;
+}
+
+export interface Order {
+  id: number;
+  customerId: number;
+  customer?: Customer;
+  orderDate: string;
+  status: "pending" | "shipped" | "delivered";
+  total: number;
+  items: {
+    productId: number;
+    product?: Product;
+    quantity: number;
+    price: number;
+  }[];
+}
