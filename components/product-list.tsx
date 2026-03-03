@@ -50,15 +50,15 @@ const ProductList = async ({
         <CategorySelect categories={categories} />
       </div>
 
-      <table className="w-full rounded-lg overflow-hidden border-neutral-400 ">
+      <table className="w-full rounded-lg overflow-hidden border-neutral-400 table-fixed ">
         <thead className="bg-neutral-100">
           <tr className=" text-sm text-neutral-600">
-            <th className="py-4 ">Product</th>
+            <th className="py-4 w-[30%]">Product</th>
             <th>Category</th>
             <th>Price</th>
             <th>Stock</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th className="">Actions</th>
           </tr>
         </thead>
         <tbody>
