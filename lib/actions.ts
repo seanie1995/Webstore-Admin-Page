@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { API_URL } from "./config";
-import { Product, ProductsResponse } from "@/app/types";
+import { ProductsResponse } from "@/app/types";
 
 export const FetchAllCategories = async () => {
   const data = await fetch(`${API_URL}/categories`).then((res) => res.json());
