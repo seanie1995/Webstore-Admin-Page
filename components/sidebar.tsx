@@ -56,8 +56,8 @@ const SideBar = () => {
                 className={`flex flex-row gap-6 rounded-xl transition-all p-2 ${
                   pathname === item.link ||
                   (pathname === "/" && item.link === "/products")
-                    ? "bg-violet-400 "
-                    : "hover:bg-violet-400"
+                    ? "bg-violet-800 text-white "
+                    : "hover:bg-violet-400 hover:text-white"
                 }`}
               >
                 <item.Icon />

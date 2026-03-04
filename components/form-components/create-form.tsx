@@ -4,8 +4,8 @@ import Form from "next/form";
 
 const CreateForm = () => {
   return (
-    <Form action={CreateProduct} classID="grid gap-4">
-      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center">
+    <Form action={CreateProduct} classID="grid ">
+      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center ">
         <label className="font-semibold" htmlFor="title">
           Title
         </label>

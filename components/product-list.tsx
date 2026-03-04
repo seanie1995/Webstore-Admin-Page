@@ -6,6 +6,8 @@ import Pagination from "./filter-components/pagination";
 import Link from "next/link";
 import CategorySelect from "./filter-components/category-select";
 import SearchBar from "./filter-components/search-bar";
+import Statistics from "./statistics";
+import PageHeader from "./page-header";
 
 const ProductList = async ({
   searchParams,
@@ -43,7 +45,9 @@ const ProductList = async ({
   const totalPages = res.pages;
 
   return (
-    <>
+    <section className="p-8">
+      <Statistics />
+
       <div className="p-6 flex flex-row gap-4">
         <LimitSelector />
         <SearchBar />
@@ -51,7 +55,7 @@ const ProductList = async ({
       </div>
 
       <table className="w-full rounded-lg overflow-hidden border-neutral-400 table-fixed ">
-        <thead className="bg-neutral-100">
+        <thead className="bg-neutral-200">
           <tr className=" text-sm text-neutral-600">
             <th className="py-4 w-[30%]">Product</th>
             <th>Category</th>
@@ -92,7 +96,7 @@ const ProductList = async ({
         </tbody>
       </table>
       <Pagination totalPages={totalPages} />
-    </>
+    </section>
   );
 };
 
