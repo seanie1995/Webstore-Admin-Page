@@ -3,6 +3,14 @@ const url = require("url");
 module.exports = (req, res, next) => {
   // if the request method is POST
   if (req.method === "POST") {
+    const stockNumber = Number(req.body.stock || 0);
+
+    let availabilityStatus;
+    if (stockNumber >= 25) availabilityStatus = "In Stock";
+    else if (stockNumber > 0) availabilityStatus = "Low Stock";
+    else availabilityStatus = "Out of Stock";
+
+    req.body.availabilityStatus = availabilityStatus;
     const requiredFields = [
       "title",
       "price",

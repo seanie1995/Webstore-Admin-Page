@@ -76,7 +76,7 @@ const ProductList = async ({
               </td>
               <td className="text-center ">{product.category?.name}</td>
               <td className="text-center">{product.price}</td>
-              <td className="text-center">{product.availabilityStatus}</td>
+              <td className="text-center">{product.stock}</td>
               <td
                 className={`text-center ${product.availabilityStatus === `In Stock` ? "text-green-600" : product.availabilityStatus === `Low Stock` ? `text-orange-600` : `text-red-700`}`}
               >

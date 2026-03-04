@@ -1,11 +1,27 @@
-import React from "react";
+"use client";
 import { CreateProduct } from "@/lib/actions";
 import Form from "next/form";
+import { useRouter } from "next/navigation";
 
 const CreateForm = () => {
+  const router = useRouter();
+
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      await CreateProduct(formData);
+
+      router.back;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
-    <Form action={CreateProduct} classID="grid ">
-      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center ">
+    <form
+      action={handleSubmit}
+      className="grid  bg-neutral-200 border-neutral-400 p-12 rounded-xl"
+    >
+      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center bg-neutral-200 border-neutral-400 p-12 rounded-xl ">
         <label className="font-semibold" htmlFor="title">
           Title
         </label>
@@ -82,8 +98,23 @@ const CreateForm = () => {
           required
         />
       </div>
-      <button type="submit">Save</button>
-    </Form>
+      <div className="grid-rows-2 flex flex-row justify-evenly">
+        <button
+          type="submit"
+          className="text-black w-1/3 bg-green-400 py-2 rounded-xl hover:bg-green-600 transition-all hover:cursor-pointer "
+        >
+          Save
+        </button>
+
+        <button
+          type="button"
+          onClick={router.back}
+          className="text-black w-1/3  bg-red-400 py-2 rounded-xl hover:bg-red-600 transition-all hover:cursor-pointer "
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
   );
 };
 

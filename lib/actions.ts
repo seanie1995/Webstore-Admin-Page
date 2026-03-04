@@ -12,7 +12,7 @@ export const FetchAllCategories = async () => {
 };
 
 export const FetchAllProducts = async (
-  limit = 6 ,
+  limit = 6,
   page = 1,
   sort = "id",
   order = "asc",
@@ -69,6 +69,18 @@ export const CreateProduct = async (formData: FormData) => {
   const stock = formData.get("stock") as string;
   const brand = formData.get("brand") as string;
 
+  let availabilityStatus: string;
+
+  if (Number(stock) >= 25) {
+    availabilityStatus = "In Stock";
+  } else if (Number(stock) < 25 && Number(stock) > 0) {
+    availabilityStatus = "Low Stock";
+  } else if (Number(stock) === 0) {
+    availabilityStatus = "Out of Stock";
+  } else {
+    throw new Error();
+  }
+
   const newProduct = {
     title,
     brand,
@@ -77,13 +89,22 @@ export const CreateProduct = async (formData: FormData) => {
     price: parseInt(price, 10),
     categoryId: parseInt(categoryId, 10),
     stock: parseInt(stock, 10),
+    availabilityStatus,
   };
+
+  console.log(newProduct);
 
   const res = await fetch(`${API_URL}/products`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(newProduct),
   });
+
+  if (!res.ok) {
+    const error = await res.text();
+    console.error(error);
+    throw new Error("Failed to create product");
+  }
 };
 
 export const UpdateProduct = async (formData: FormData) => {
@@ -144,7 +165,6 @@ export async function UpdateProductBind(id: string, formData: FormData) {
   });
 
   const data = await res.json();
-  console.log(data);
 
   revalidatePath("/");
   redirect("/");

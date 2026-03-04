@@ -12,7 +12,7 @@ const PageHeader = () => {
 
       <Link
         className="flex flex-row bg-violet-400 items-center gap-2 p-4 rounded-xl hover:bg-violet-800 hover:text-white transition-all"
-        href="/create-product"
+        href="/products/create"
       >
         <Plus />
         Add Product
