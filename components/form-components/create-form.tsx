@@ -10,14 +10,14 @@ const CreateForm = () => {
     try {
       await CreateProduct(formData);
 
-      router.back;
+      router.push("/products");
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <form
+    <Form
       action={handleSubmit}
       className="grid  bg-neutral-200 border-neutral-400 p-12 rounded-xl"
     >
@@ -114,7 +114,7 @@ const CreateForm = () => {
           Cancel
         </button>
       </div>
-    </form>
+    </Form>
   );
 };
 

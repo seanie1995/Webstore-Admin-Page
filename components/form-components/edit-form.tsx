@@ -1,18 +1,24 @@
-import React from "react";
-import { API_URL } from "@/lib/config";
+"use client";
+
 import Form from "next/form";
 import type { Category, Product } from "@/app/types";
 import { UpdateProduct } from "@/lib/actions";
+import { useRouter } from "next/navigation";
 
-const EditForm = async ({ product }: { product: Product }) => {
-  const categories: Category[] = await fetch(`${API_URL}/categories`).then(
-    (res) => res.json(),
-  );
+type EditFormProps = {
+  categories: Category[];
+  product: Product;
+};
 
+const EditForm = ({ product, categories }: EditFormProps) => {
+  const router = useRouter();
   return (
-    <Form action={UpdateProduct} classID="grid gap-4">
+    <Form
+      action={UpdateProduct}
+      className="grid  bg-neutral-200 border-neutral-400 p-12 rounded-xl"
+    >
       <input readOnly name="id" value={product.id} />
-      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center">
+      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center bg-neutral-200 border-neutral-400 p-12 rounded-xl ">
         <label htmlFor="title" className="font-semibold">
           Title
         </label>
@@ -108,7 +114,22 @@ const EditForm = async ({ product }: { product: Product }) => {
           required
         />
       </div>
-      <button type="submit">Save</button>
+      <div className="grid-rows-2 flex flex-row justify-evenly">
+        <button
+          type="submit"
+          className="text-black w-1/3 bg-green-400 py-2 rounded-xl hover:bg-green-600 transition-all hover:cursor-pointer "
+        >
+          Save
+        </button>
+
+        <button
+          type="button"
+          onClick={router.back}
+          className="text-black w-1/3  bg-red-400 py-2 rounded-xl hover:bg-red-600 transition-all hover:cursor-pointer "
+        >
+          Cancel
+        </button>
+      </div>
     </Form>
   );
 };

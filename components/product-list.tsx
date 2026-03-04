@@ -7,7 +7,7 @@ import Link from "next/link";
 import CategorySelect from "./filter-components/category-select";
 import SearchBar from "./filter-components/search-bar";
 import Statistics from "./statistics";
-import PageHeader from "./page-header";
+import { DeleteForm } from "./form-components/delete.form";
 
 const ProductList = async ({
   searchParams,
@@ -84,11 +84,10 @@ const ProductList = async ({
               </td>
               <td className="px-4">
                 <div className="flex flex-row justify-end gap-4">
-                  <Link href={"/edit-page"}>
+                  <Link href={`/products/edit/${product.id}`}>
                     <SquarePen className="text-purple-700" />
                   </Link>
-
-                  <Trash2 className="text-red-600" />
+                  <DeleteForm id={product?.id.toString()} />
                 </div>
               </td>
             </tr>

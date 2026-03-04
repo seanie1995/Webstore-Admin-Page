@@ -33,7 +33,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
   };
 
   return (
-    <div className="flex gap-4 p-4 justify-between">
+    <div className="flex gap-4 p-4 justify-between border-b border-l border-r border-neutral-200 rounded-b-xl">
       <span>
         Page {currentPage} of {totalPages}
       </span>

@@ -117,6 +117,18 @@ export const UpdateProduct = async (formData: FormData) => {
   const stock = formData.get("stock") as string;
   const brand = formData.get("brand") as string;
 
+  let availabilityStatus: string;
+
+  if (Number(stock) >= 25) {
+    availabilityStatus = "In Stock";
+  } else if (Number(stock) < 25 && Number(stock) > 0) {
+    availabilityStatus = "Low Stock";
+  } else if (Number(stock) === 0) {
+    availabilityStatus = "Out of Stock";
+  } else {
+    throw new Error();
+  }
+
   const newProduct = {
     title,
     brand,
@@ -125,6 +137,7 @@ export const UpdateProduct = async (formData: FormData) => {
     price: parseInt(price, 10),
     categoryId: parseInt(categoryId, 10),
     stock: parseInt(stock, 10),
+    availabilityStatus,
   };
 
   const res = await fetch(`${API_URL}/products/${id}`, {
