@@ -16,9 +16,9 @@ const EditPage = async ({ params }: EditPageProps) => {
   const categories = await FetchAllCategories();
 
   return (
-    <div>
+    <>
       <EditForm product={product} categories={categories} />
-    </div>
+    </>
   );
 };
 
