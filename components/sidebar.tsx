@@ -9,6 +9,7 @@ import {
   Settings,
 } from "lucide-react";
 import Link from "next/link";
+import LogoutButton from "./logout-button";
 
 const SideBar = () => {
   const menuItems = [
@@ -54,8 +55,7 @@ const SideBar = () => {
               <Link
                 href={item.link}
                 className={`flex flex-row gap-6 rounded-xl transition-all p-2 ${
-                  pathname === item.link ||
-                  (pathname === "/" && item.link === "/products")
+                  pathname === item.link
                     ? "bg-violet-800 text-white "
                     : "hover:bg-violet-400 hover:text-white"
                 }`}
@@ -67,6 +67,8 @@ const SideBar = () => {
           ))}
         </ul>
       </section>
+
+      <LogoutButton />
     </div>
   );
 };

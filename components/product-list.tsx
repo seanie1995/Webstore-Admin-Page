@@ -54,7 +54,7 @@ const ProductList = async ({
         <CategorySelect categories={categories} />
       </div>
 
-      <table className="w-full rounded-lg overflow-hidden border-neutral-400 table-fixed ">
+      <table className="w-full rounded-lg overflow-hidden border-neutral-400 table-fixed bg-white ">
         <thead className="bg-neutral-200">
           <tr className=" text-sm text-neutral-600">
             <th className="py-4 w-[30%]">Product</th>

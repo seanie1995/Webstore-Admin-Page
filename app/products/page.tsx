@@ -6,7 +6,7 @@ import React from "react";
 
 const Products = (params: PageProps<"/">) => {
   return (
-    <main className="">
+    <main className="bg-gray-100">
       <PageHeader />
       <section>
         <ProductList searchParams={params.searchParams} />

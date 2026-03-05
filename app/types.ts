@@ -55,8 +55,9 @@ export interface ProductsResponse {
 }
 
 export interface Customer {
-  id: number;
-  name: string;
+  id: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone?: string;
   address: string;
