@@ -4,11 +4,10 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import React from "react";
 import { auth } from "@/firebase";
-import { useRouter } from "next/navigation";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
