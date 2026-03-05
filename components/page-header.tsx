@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 
 const PageHeader = () => {
   return (
-    <section className="border-b border-neutral-400 p-8 flex flex-row justify-between">
+    <section className="border-b border-neutral-400 p-8 flex flex-row justify-between bg-white">
       <div>
         <header className="text-2xl font-bold">Product Management</header>
         <span>Manage your store inventory</span>

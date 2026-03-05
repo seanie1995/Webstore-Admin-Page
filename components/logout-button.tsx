@@ -1,9 +1,12 @@
-import React from "react";
+"use client";
+import { useRouter } from "next/navigation";
 
 const LogoutButton = () => {
+  const router = useRouter();
   const handleClick = async () => {
     await fetch("/api/logout", { method: "POST" });
-    window.location.href = "/";
+    router.push("/");
+    router.refresh();
   };
 
   return (
