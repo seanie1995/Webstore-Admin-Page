@@ -25,3 +25,19 @@ const FetchAllCustomers = async (): Promise<Customer[]> => {
     throw new Error("Failed to fetch customers");
   }
 };
+
+const CreateNewCustomer = async (
+  customer: Omit<Customer, "id">,
+): Promise<Customer> => {
+  try {
+    const docRef = await adminDb.collection("customers").add(customer);
+
+    return {
+      id: docRef.id,
+      ...customer,
+    };
+  } catch (error) {
+    console.error("Error creating customer", error);
+    throw new Error("Failed to create customer");
+  }
+};

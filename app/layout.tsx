@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "@/components/sidebar";
+import Login from "./login/page";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard",
@@ -14,15 +15,21 @@ export default function RootLayout({
   children: React.ReactNode;
   modal: React.ReactNode;
 }>) {
+  const loggedIn = false;
+
   return (
     <html lang="en">
       <body>
-        <div className="grid grid-cols-[1fr_3fr] h-screen">
-          <section className="h-full">
+        {loggedIn ? (
+          <div className="grid grid-cols-[1fr_3fr] h-screen">
             <Sidebar />
-          </section>
-          <main> {children}</main>
-        </div>
+            <main>{children}</main>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-screen">
+            <Login />
+          </div>
+        )}
         {modal}
       </body>
     </html>
