@@ -9,6 +9,7 @@ import {
   Settings,
 } from "lucide-react";
 import Link from "next/link";
+import LogoutButton from "./logout-button";
 
 const SideBar = () => {
   const menuItems = [
@@ -66,6 +67,8 @@ const SideBar = () => {
           ))}
         </ul>
       </section>
+
+      <LogoutButton />
     </div>
   );
 };

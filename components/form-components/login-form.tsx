@@ -1,18 +1,18 @@
 "use client";
 
-import { login } from "@/lib/authActions";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import React from "react";
+import { auth } from "@/firebase";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-
-    const auth = getAuth();
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -30,7 +30,8 @@ const Login = () => {
       if (!res.ok) {
         throw new Error("Login Failed");
       }
-      setLoading(false);
+
+      window.location.href = "/";
     } catch (error) {
       console.error("Login error:", error);
     }
