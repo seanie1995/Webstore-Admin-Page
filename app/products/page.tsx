@@ -1,5 +1,5 @@
-import CreateForm from "@/components/form-components/create-form";
-import PageHeader from "@/components/page-header";
+import CreateForm from "@/components/product-form-components/create-form";
+import PageHeader from "@/components/products-header";
 import ProductList from "@/components/product-list";
 import SideBar from "@/components/sidebar";
 import React from "react";

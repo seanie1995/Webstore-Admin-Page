@@ -2,31 +2,70 @@
 import { adminDb } from "./firebaseAdmin";
 import { Customer } from "@/app/types";
 
-const FetchAllCustomers = async (): Promise<Customer[]> => {
+export const FetchAllCustomers = async (
+  limit: number = 16,
+  orderBy: string = "lastName",
+  order: "asc" | "desc" = "asc",
+  lastId?: string,
+): Promise<{
+  customers: Customer[];
+  lastId: string | null;
+  hasMore: boolean;
+}> => {
   try {
-    const snapshot = await adminDb.collection("customers").get();
+    let query = adminDb
+      .collection("customers")
+      .orderBy(orderBy, order)
+      .limit(limit + 1);
 
-    const customers: Customer[] = snapshot.docs.map((doc) => {
-      const data = doc.data();
+    if (lastId) {
+      const lastDoc = await adminDb.collection("customers").doc(lastId).get();
+      query = query.startAfter(lastDoc);
+    }
 
-      return {
-        id: doc.id,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        phone: data.phone ?? undefined,
-        address: data.address,
-      };
-    });
+    const snapshot = await query.get();
+    const docs = snapshot.docs;
 
-    return customers;
+    const hasMore = docs.length > limit;
+
+    const customers = docs
+      .slice(0, limit)
+      .map((doc) => ({ id: doc.id, ...doc.data() }) as Customer);
+
+    const lastVisible =
+      customers.length > 0 ? customers[customers.length - 1].id : null;
+    return { customers, lastId: lastVisible, hasMore };
   } catch (error) {
     console.error("Error fetching customers", error);
-    throw new Error("Failed to fetch customers");
+    throw error;
   }
 };
 
-const CreateNewCustomer = async (
+export const FetchCustomerById = async (id: string): Promise<Customer> => {
+  try {
+    const doc = await adminDb.collection("customers").doc(id).get();
+
+    if (!doc.exists) {
+      throw new Error("Customer not found");
+    }
+
+    return { id: doc.id, ...doc.data() } as Customer;
+  } catch (error) {
+    console.error("Failed to fetch customer:", error);
+    throw error;
+  }
+};
+
+export const DeleteCustomer = async (id: string): Promise<void> => {
+  try {
+    await adminDb.collection("customers").doc(id).delete();
+  } catch (error) {
+    console.error("Failed to delete customer:", error);
+    throw error;
+  }
+};
+
+export const CreateNewCustomer = async (
   customer: Omit<Customer, "id">,
 ): Promise<Customer> => {
   try {
@@ -38,6 +77,6 @@ const CreateNewCustomer = async (
     };
   } catch (error) {
     console.error("Error creating customer", error);
-    throw new Error("Failed to create customer");
+    throw error;
   }
 };

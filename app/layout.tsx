@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "@/components/sidebar";
-import Login from "@/components/form-components/login-form";
+import Login from "@/components/product-form-components/login-form";
 import { cookies } from "next/headers";
 import { adminAuth } from "@/lib/firebaseAdmin";
 
