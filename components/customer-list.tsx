@@ -31,6 +31,8 @@ const CustomerList = async ({
     currentLastId,
   );
 
+  const newLastId = res.lastId;
+
   const { customers, lastId: nextLastId, hasMore } = await res;
   return (
     <section className="p-8">
@@ -72,7 +74,7 @@ const CustomerList = async ({
           ))}
         </tbody>
       </table>
-      <CustomerPagination totalPages={5} />
+      <CustomerPagination lastId={newLastId} />
     </section>
   );
 };

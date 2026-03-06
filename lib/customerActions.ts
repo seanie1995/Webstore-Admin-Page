@@ -6,7 +6,7 @@ import { GetSession } from "./authActions";
 import { redirect } from "next/dist/server/api-utils";
 
 export const FetchAllCustomers = async (
-  limit: number = 16,
+  limit: number = 10,
   orderBy: string = "lastName",
   order: "asc" | "desc" = "asc",
   lastId?: string,
