@@ -5,8 +5,9 @@ import { useState } from "react";
 import React from "react";
 import { auth } from "@/firebase";
 import { useRouter } from "next/navigation";
+import { Login } from "@/lib/authActions";
 
-const Login = () => {
+const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -22,15 +23,7 @@ const Login = () => {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCred.user.getIdToken();
 
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idToken }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Login Failed");
-      }
+      await Login(idToken);
 
       router.push("/");
       router.refresh();
@@ -89,4 +82,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginForm;

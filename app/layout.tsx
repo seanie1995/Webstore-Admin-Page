@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "@/components/sidebar";
-import Login from "@/components/product-form-components/login-form";
+import LoginForm from "@/components/login-form";
 import { cookies } from "next/headers";
 import { adminAuth } from "@/lib/firebaseAdmin";
 
@@ -40,7 +40,7 @@ export default async function RootLayout({
           </div>
         ) : (
           <div className="flex items-center justify-center h-screen">
-            <Login />
+            <LoginForm />
           </div>
         )}
         {modal}

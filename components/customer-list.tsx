@@ -1,6 +1,7 @@
 import { NEXT_PUBLIC_BASE_URL } from "@/lib/config";
 import { Customer } from "@/app/types";
 import { SquarePen, Trash2 } from "lucide-react";
+import { FetchAllCustomers } from "@/lib/customerActions";
 
 const CustomerList = async ({
   searchParams,
@@ -17,21 +18,19 @@ const CustomerList = async ({
 
   const currentLimit = Number(Array.isArray(limit) ? limit[0] : limit);
   const currentOrderBy = Array.isArray(orderBy) ? orderBy[0] : orderBy;
-  const currentOrder = Array.isArray(order) ? order[0] : order;
+  const currentOrder =
+    (Array.isArray(order) ? order[0] : order) === "desc" ? "desc" : "asc";
   const currentLastId = Array.isArray(lastId) ? lastId[0] : lastId;
   const currentSearch = Array.isArray(search) ? search[0] : search;
 
-  const params = new URLSearchParams({
-    limit: currentLimit.toString(),
-    orderBy: currentOrderBy,
-    order: currentOrder,
-    ...(currentLastId && { lastId: currentLastId }),
-    ...(currentSearch && { search: currentSearch }),
-  });
+  const res = await FetchAllCustomers(
+    currentLimit,
+    currentOrderBy,
+    currentOrder,
+    currentLastId,
+  );
 
-  const res = await fetch(`${NEXT_PUBLIC_BASE_URL}/api/customers?${params}`);
-  const { customers, lastId: nextLastId, hasMore } = await res.json();
-
+  const { customers, lastId: nextLastId, hasMore } = await res;
   return (
     <section className="p-8">
       {" "}

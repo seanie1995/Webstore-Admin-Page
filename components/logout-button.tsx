@@ -1,10 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { Logout } from "@/lib/authActions";
 
 const LogoutButton = () => {
   const router = useRouter();
   const handleClick = async () => {
-    await fetch("/api/logout", { method: "POST" });
+    await Logout();
     router.push("/");
     router.refresh();
   };
