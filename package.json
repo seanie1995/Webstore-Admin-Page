@@ -29,6 +29,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "concurrently": "^9.2.1",
     "json-server": "^0.17.4",
+    "supabase": "^2.76.17",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
