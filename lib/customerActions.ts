@@ -5,10 +5,6 @@ import { cookies } from "next/headers";
 import { GetSession } from "./authActions";
 import { redirect } from "next/dist/server/api-utils";
 
-const ALLOWED_EMAILS = process.env.ALLOWED_EMAILS
-  ? JSON.parse(process.env.ALLOWED_EMAILS)
-  : [];
-
 export const FetchAllCustomers = async (
   limit: number = 16,
   orderBy: string = "lastName",

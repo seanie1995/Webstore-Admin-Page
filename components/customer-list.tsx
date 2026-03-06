@@ -2,6 +2,7 @@ import { NEXT_PUBLIC_BASE_URL } from "@/lib/config";
 import { Customer } from "@/app/types";
 import { SquarePen, Trash2 } from "lucide-react";
 import { FetchAllCustomers } from "@/lib/customerActions";
+import CustomerPagination from "./customers-filter-components/customer-pagination";
 
 const CustomerList = async ({
   searchParams,
@@ -71,6 +72,7 @@ const CustomerList = async ({
           ))}
         </tbody>
       </table>
+      <CustomerPagination totalPages={5} />
     </section>
   );
 };
