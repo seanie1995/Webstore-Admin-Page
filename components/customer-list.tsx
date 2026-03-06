@@ -1,8 +1,8 @@
-import { NEXT_PUBLIC_BASE_URL } from "@/lib/config";
 import { Customer } from "@/app/types";
 import { SquarePen, Trash2 } from "lucide-react";
 import { FetchAllCustomers } from "@/lib/customerActions";
 import CustomerPagination from "./customers-filter-components/customer-pagination";
+import LimitSelector from "./product-filter-components/limit-select";
 
 const CustomerList = async ({
   searchParams,
@@ -10,7 +10,7 @@ const CustomerList = async ({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
   const {
-    limit = "10",
+    limit = "6",
     orderBy = "lastName",
     order = "asc",
     lastId = "",
@@ -37,6 +37,7 @@ const CustomerList = async ({
   return (
     <section className="p-8">
       {" "}
+      <div className="p-6 flex flex-row gap-4"></div>
       <table className="w-full rounded-lg overflow-hidden border-neutral-400 table-fixed bg-white ">
         <thead className="bg-neutral-200">
           <tr className=" text-sm text-neutral-600">
