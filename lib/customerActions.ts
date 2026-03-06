@@ -1,6 +1,13 @@
 "use server";
 import { adminDb } from "./firebaseAdmin";
 import { Customer } from "@/app/types";
+import { cookies } from "next/headers";
+import { GetSession } from "./authActions";
+import { redirect } from "next/dist/server/api-utils";
+
+const ALLOWED_EMAILS = process.env.ALLOWED_EMAILS
+  ? JSON.parse(process.env.ALLOWED_EMAILS)
+  : [];
 
 export const FetchAllCustomers = async (
   limit: number = 16,
@@ -13,6 +20,12 @@ export const FetchAllCustomers = async (
   hasMore: boolean;
 }> => {
   try {
+    const session = GetSession();
+
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+
     let query = adminDb
       .collection("customers")
       .orderBy(orderBy, order)
@@ -43,6 +56,11 @@ export const FetchAllCustomers = async (
 
 export const FetchCustomerById = async (id: string): Promise<Customer> => {
   try {
+    const session = GetSession();
+
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
     const doc = await adminDb.collection("customers").doc(id).get();
 
     if (!doc.exists) {
@@ -58,6 +76,11 @@ export const FetchCustomerById = async (id: string): Promise<Customer> => {
 
 export const DeleteCustomer = async (id: string): Promise<void> => {
   try {
+    const session = GetSession();
+
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
     await adminDb.collection("customers").doc(id).delete();
   } catch (error) {
     console.error("Failed to delete customer:", error);
@@ -69,6 +92,11 @@ export const CreateNewCustomer = async (
   customer: Omit<Customer, "id">,
 ): Promise<Customer> => {
   try {
+    const session = GetSession();
+
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
     const docRef = await adminDb.collection("customers").add(customer);
 
     return {

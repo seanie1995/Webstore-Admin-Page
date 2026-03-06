@@ -12,7 +12,7 @@ export const Login = async (idToken: string) => {
     const decodedToken = await adminAuth.verifyIdToken(idToken);
     const allowedEmails = ALLOWED_EMAILS;
 
-    const { uid, email } = decodedToken;
+    const { email } = decodedToken;
 
     if (!email) {
       throw new Error("Email not available in token.");
@@ -58,20 +58,16 @@ export const Logout = async () => {
   }
 };
 
-export const RequireAdmin = async (
-  idToken: string,
-  allowedEmails: string[],
-) => {
+export const GetSession = async () => {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("session")?.value;
+
+  if (!sessionCookie) return null;
+
   try {
-    const decodedToken = await adminAuth.verifyIdToken(idToken);
-    const { email, uid } = decodedToken;
-
-    if (!email || !allowedEmails.includes(email)) {
-      throw new Error("Not authorized");
-    }
-
-    return { uid, email };
-  } catch (err) {
-    throw new Error("Unauthorized");
+    const decoded = await adminAuth.verifySessionCookie(sessionCookie, true);
+    return decoded;
+  } catch {
+    return null;
   }
 };

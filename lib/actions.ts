@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { API_URL } from "./config";
 import { ProductsResponse } from "@/app/types";
+import { GetSession } from "./authActions";
 
 export const FetchAllCategories = async () => {
   const data = await fetch(`${API_URL}/categories`).then((res) => res.json());
@@ -28,6 +29,12 @@ export const FetchAllProducts = async (
     _expand: "category",
   });
 
+  const session = GetSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
   if (categoryId) {
     params.set("categoryId", categoryId);
   }
@@ -44,6 +51,11 @@ export const FetchAllProducts = async (
 };
 
 export const FetchSingleProductById = async (id: string) => {
+  const session = GetSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
   const data = await fetch(`${API_URL}/products/${id}`).then((res) =>
     res.json(),
   );
@@ -61,6 +73,11 @@ export const FetchSingleProductById = async (id: string) => {
 */
 
 export const CreateProduct = async (formData: FormData) => {
+  const session = GetSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
   const title = formData.get("title") as string;
   const price = formData.get("price") as string;
   const description = formData.get("description") as string;
@@ -108,6 +125,11 @@ export const CreateProduct = async (formData: FormData) => {
 };
 
 export const UpdateProduct = async (formData: FormData) => {
+  const session = GetSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
   const id = formData.get("id") as string;
   const title = formData.get("title") as string;
   const price = formData.get("price") as string;
@@ -153,6 +175,12 @@ export const UpdateProduct = async (formData: FormData) => {
 };
 
 export async function UpdateProductBind(id: string, formData: FormData) {
+  const session = GetSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
   const title = formData.get("title") as string;
   const price = formData.get("price") as string;
   const description = formData.get("description") as string;
@@ -184,6 +212,11 @@ export async function UpdateProductBind(id: string, formData: FormData) {
 }
 
 export async function deleteProduct(formData: FormData) {
+  const session = GetSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
   const id = formData.get("id") as string;
 
   const res = await fetch(`${API_URL}/products/${id}`, {
@@ -197,6 +230,11 @@ export async function deleteProduct(formData: FormData) {
 }
 
 export const DeleteProductById = async (id: string) => {
+  const session = GetSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
   const res = await fetch(`${API_URL}/products/${id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
@@ -210,6 +248,11 @@ export const DeleteProductById = async (id: string) => {
 };
 
 export async function deleteProductBind(id: string) {
+  const session = GetSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
   const res = await fetch(`${API_URL}/products/${id}`, {
     method: "DELETE",
   });
