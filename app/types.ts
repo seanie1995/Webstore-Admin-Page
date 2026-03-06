@@ -65,7 +65,7 @@ export interface Customer {
 
 export interface Order {
   id: number;
-  customerId: number;
+  customerId: string;
   customer?: Customer;
   orderDate: string;
   status: "pending" | "shipped" | "delivered";

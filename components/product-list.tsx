@@ -1,13 +1,12 @@
-import React from "react";
-import { Trash2, SquarePen } from "lucide-react";
+import { SquarePen } from "lucide-react";
 import { FetchAllCategories, FetchAllProducts } from "@/lib/actions";
-import LimitSelector from "./filter-components/limit-select";
-import Pagination from "./filter-components/pagination";
+import LimitSelector from "./product-filter-components/limit-select";
+import Pagination from "./product-filter-components/pagination";
 import Link from "next/link";
-import CategorySelect from "./filter-components/category-select";
-import SearchBar from "./filter-components/search-bar";
+import CategorySelect from "./product-filter-components/category-select";
+import SearchBar from "./product-filter-components/search-bar";
 import Statistics from "./statistics";
-import { DeleteForm } from "./form-components/delete.form";
+import { DeleteForm } from "./product-form-components/delete.form";
 
 const ProductList = async ({
   searchParams,
