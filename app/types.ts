@@ -64,7 +64,7 @@ export interface Customer {
 }
 
 export interface Order {
-  id: number;
+  id: string;
   customerId: string;
   customer?: Customer;
   orderDate: string;
