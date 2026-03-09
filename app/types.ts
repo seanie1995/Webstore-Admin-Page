@@ -87,4 +87,5 @@ export type CustomerOption = {
 export type ProductOption = {
   id: string;
   name: string;
+  price: number;
 };

@@ -22,15 +22,28 @@ const AddNewOrder = async () => {
     const data: ProductOption = {
       id: i.id.toString(),
       name: i.title,
+      price: i.price,
     };
 
     return data;
   });
 
+  const today = new Date();
+
+  const formattedDate = today.toLocaleDateString("en-GB", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
-    <div>
+    <main className="p-8">
+      <header className="flex flex-row justify-between align-middle">
+        <span className="text-4xl">Create Order</span>
+        <span className="text-2xl ">{formattedDate}</span>
+      </header>
       <CreateOrderForm customers={customerOptions} products={productOptions} />
-    </div>
+    </main>
   );
 };
 
