@@ -2,7 +2,7 @@
 import { adminDb } from "./firebaseAdmin";
 import { Customer } from "@/app/types";
 import { GetSession } from "./authActions";
-import { getCountFromServer, collection } from "firebase/firestore";
+import { collection } from "firebase/firestore";
 
 export const FetchAllCustomers = async (
   limit: number = 10,
@@ -112,4 +112,12 @@ export const CreateNewCustomer = async (
     console.error("Error creating customer", error);
     throw error;
   }
+};
+
+export const FetchCustomerCount = async () => {
+  const snapshot = await adminDb.collection("customers").count().get();
+
+  const total = snapshot.data().count;
+
+  return total;
 };

@@ -7,7 +7,13 @@ import Link from "next/link";
 
 const PAGE_SIZE = 15;
 
-const CustomerPagination = ({ hasMore }: { hasMore: boolean | null }) => {
+const CustomerPagination = ({
+  hasMore,
+  totalCustomers,
+}: {
+  hasMore: boolean | null;
+  totalCustomers: number;
+}) => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
 
@@ -16,7 +22,7 @@ const CustomerPagination = ({ hasMore }: { hasMore: boolean | null }) => {
   const loadAll = () => {
     const params = new URLSearchParams(searchParams.toString());
 
-    params.set("limit", "1000");
+    params.set("limit", totalCustomers.toString());
 
     return `${pathName}?${params.toString()}`;
   };
@@ -46,7 +52,10 @@ const CustomerPagination = ({ hasMore }: { hasMore: boolean | null }) => {
   };
 
   return (
-    <div className="flex gap-4 p-4  border-b border-l border-r border-neutral-200 rounded-b-xl justify-end">
+    <div className="flex gap-4 p-4  border-b border-l border-r border-neutral-200 rounded-b-xl justify-between">
+      <span>
+        Customers {currentLimit} of {totalCustomers}
+      </span>
       <div className="flex gap-4">
         <Link
           scroll={false}
