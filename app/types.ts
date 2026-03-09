@@ -77,3 +77,14 @@ export interface Order {
     price: number;
   }[];
 }
+
+export type CustomerOption = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+export type ProductOption = {
+  id: string;
+  name: string;
+};
