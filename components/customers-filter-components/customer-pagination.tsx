@@ -5,27 +5,42 @@ import { useRouter } from "next/navigation";
 
 import Link from "next/link";
 
-const CustomerPagination = ({ lastId }: { lastId: string | null }) => {
+const PAGE_SIZE = 15;
+
+const CustomerPagination = ({ hasMore }: { hasMore: boolean | null }) => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
-  const isFirstPage = !searchParams.get("lastId");
 
-  const createPageUrl = () => {
+  const currentLimit = Number(searchParams.get("limit")) || PAGE_SIZE;
+
+  const loadAll = () => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (lastId === null) {
-      return `${pathName}?${params.toString()}`;
-    }
-
-    params.set("lastId", lastId.toString());
+    params.set("limit", "1000");
 
     return `${pathName}?${params.toString()}`;
   };
 
-  const returnToFirstUrl = () => {
+  const loadFirst = () => {
     const params = new URLSearchParams(searchParams.toString());
 
-    params.delete("lastId");
+    params.set("limit", PAGE_SIZE.toString());
+
+    return `${pathName}?${params.toString()}`;
+  };
+
+  const loadMore = () => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set("limit", (currentLimit + PAGE_SIZE).toString());
+
+    return `${pathName}?${params.toString()}`;
+  };
+
+  const loadLess = () => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set("limit", (currentLimit - PAGE_SIZE).toString());
 
     return `${pathName}?${params.toString()}`;
   };
@@ -35,26 +50,36 @@ const CustomerPagination = ({ lastId }: { lastId: string | null }) => {
       <div className="flex gap-4">
         <Link
           scroll={false}
-          href={returnToFirstUrl()}
-          className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all  ${isFirstPage ? "opacity-50 pointer-events-none cursor-not-allowed" : "hover:bg-purple-700 cursor-pointer"}  `}
+          href={loadFirst()}
+          className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all  ${currentLimit === PAGE_SIZE ? "opacity-50 pointer-events-none cursor-not-allowed" : "hover:bg-purple-700 cursor-pointer"}  `}
         >
           {" "}
           First
         </Link>
-        {/* <button
-          onClick={router.back}
-          className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all hover:cursor-pointer ${!lastId ? "opacity-50 pointer-events-none cursor-not-allowed" : "hover:bg-purple-700 cursor-pointer"}  `}
-        >
-          {" "}
-          Previous
-        </button> */}
         <Link
           scroll={false}
-          href={createPageUrl()}
-          className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all ${!lastId ? "opacity-50 pointer-events-none cursor-not-allowed" : "hover:bg-purple-700 cursor-pointer"} `}
+          href={loadLess()}
+          className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all  ${currentLimit === PAGE_SIZE ? "opacity-50 pointer-events-none cursor-not-allowed" : "hover:bg-purple-700 cursor-pointer"}  `}
         >
           {" "}
-          Next
+          Less
+        </Link>
+
+        <Link
+          scroll={false}
+          href={loadMore()}
+          className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all ${!hasMore ? "opacity-50 pointer-events-none cursor-not-allowed" : "hover:bg-purple-700 cursor-pointer"} `}
+        >
+          {" "}
+          More
+        </Link>
+        <Link
+          scroll={false}
+          href={loadAll()}
+          className={`border border-neutral-400 rounded-lg px-2 hover:bg-purple-700 transition-all ${!hasMore ? "opacity-50 pointer-events-none cursor-not-allowed" : "hover:bg-purple-700 cursor-pointer"} `}
+        >
+          {" "}
+          All
         </Link>
       </div>
     </div>

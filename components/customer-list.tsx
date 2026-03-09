@@ -3,6 +3,9 @@ import { SquarePen, Trash2 } from "lucide-react";
 import { FetchAllCustomers } from "@/lib/customerActions";
 import CustomerPagination from "./customers-filter-components/customer-pagination";
 import LimitSelector from "./product-filter-components/limit-select";
+import CustomerSearchBar from "./customers-filter-components/customer-search";
+import CustomerSortSelect from "./customers-filter-components/customer-category-sortBy";
+import CustomerSortOrder from "./customers-filter-components/customer-sort-order";
 
 const CustomerList = async ({
   searchParams,
@@ -10,7 +13,7 @@ const CustomerList = async ({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
   const {
-    limit = "6",
+    limit = "10",
     orderBy = "lastName",
     order = "asc",
     lastId = "",
@@ -29,6 +32,7 @@ const CustomerList = async ({
     currentOrderBy,
     currentOrder,
     currentLastId,
+    currentSearch,
   );
 
   const newLastId = res.lastId;
@@ -36,8 +40,11 @@ const CustomerList = async ({
   const { customers, lastId: nextLastId, hasMore } = await res;
   return (
     <section className="p-8">
-      {" "}
-      <div className="p-6 flex flex-row gap-4"></div>
+      <div className="p-6 flex flex-row gap-4">
+        <CustomerSearchBar />
+        <CustomerSortSelect />
+        <CustomerSortOrder />
+      </div>
       <table className="w-full rounded-lg overflow-hidden border-neutral-400 table-fixed bg-white ">
         <thead className="bg-neutral-200">
           <tr className=" text-sm text-neutral-600">
@@ -75,7 +82,7 @@ const CustomerList = async ({
           ))}
         </tbody>
       </table>
-      <CustomerPagination lastId={newLastId} />
+      <CustomerPagination hasMore={hasMore} />
     </section>
   );
 };
