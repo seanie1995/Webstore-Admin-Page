@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Logout } from "@/lib/authActions";
+import { LogOut } from "lucide-react";
 
 const LogoutButton = () => {
   const router = useRouter();
@@ -13,8 +14,9 @@ const LogoutButton = () => {
   return (
     <button
       onClick={handleClick}
-      className=" hover:bg-red-800 hover:cursor-pointer transition-all bg-red-600 w-1/4 py-2 text-white rounded-xl mx-auto"
+      className="hover:cursor-pointer transition-all flex flex-row gap-6 p-2 hover:text-red-600 "
     >
+      <LogOut className={`text-red-600  hover:cursor-pointer transition-all`} />
       Logout
     </button>
   );

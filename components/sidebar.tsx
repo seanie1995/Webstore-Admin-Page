@@ -65,10 +65,12 @@ const SideBar = () => {
               </Link>
             </li>
           ))}
+          <li>
+            {" "}
+            <LogoutButton />
+          </li>
         </ul>
       </section>
-
-      <LogoutButton />
     </div>
   );
 };
