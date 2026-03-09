@@ -1,8 +1,11 @@
-import { NEXT_PUBLIC_BASE_URL } from "@/lib/config";
 import { Customer } from "@/app/types";
 import { SquarePen, Trash2 } from "lucide-react";
-import { FetchAllCustomers } from "@/lib/customerActions";
+import { FetchAllCustomers, FetchCustomerCount } from "@/lib/customerActions";
 import CustomerPagination from "./customers-filter-components/customer-pagination";
+import LimitSelector from "./product-filter-components/limit-select";
+import CustomerSearchBar from "./customers-filter-components/customer-search";
+import CustomerSortSelect from "./customers-filter-components/customer-category-sortBy";
+import CustomerSortOrder from "./customers-filter-components/customer-sort-order";
 
 const CustomerList = async ({
   searchParams,
@@ -29,12 +32,22 @@ const CustomerList = async ({
     currentOrderBy,
     currentOrder,
     currentLastId,
+    currentSearch,
   );
 
+  const newLastId = res.lastId;
+
+  const customerCount = await FetchCustomerCount();
+
   const { customers, lastId: nextLastId, hasMore } = await res;
+
   return (
     <section className="p-8">
-      {" "}
+      <div className="p-6 flex flex-row gap-4">
+        <CustomerSearchBar />
+        <CustomerSortSelect />
+        <CustomerSortOrder />
+      </div>
       <table className="w-full rounded-lg overflow-hidden border-neutral-400 table-fixed bg-white ">
         <thead className="bg-neutral-200">
           <tr className=" text-sm text-neutral-600">
@@ -54,10 +67,19 @@ const CustomerList = async ({
               <td className="text-left py-4 px-4">
                 <div>
                   <div className="font-bold">
-                    {customer.firstName} {customer.lastName}
+                    {orderBy === "lastName" ? (
+                      <span>
+                        {customer.lastName}, {customer.firstName}
+                      </span>
+                    ) : (
+                      <span>
+                        {customer.firstName} {customer.lastName}
+                      </span>
+                    )}
                   </div>
                 </div>
               </td>
+
               <td className="text-center ">{customer.email}</td>
               <td className="text-center">{customer.phone}</td>
               <td className="text-center">{customer.address}</td>
@@ -72,7 +94,8 @@ const CustomerList = async ({
           ))}
         </tbody>
       </table>
-      <CustomerPagination totalPages={5} />
+
+      <CustomerPagination hasMore={hasMore} totalCustomers={customerCount} />
     </section>
   );
 };

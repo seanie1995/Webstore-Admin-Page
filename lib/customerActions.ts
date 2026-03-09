@@ -1,15 +1,15 @@
 "use server";
 import { adminDb } from "./firebaseAdmin";
 import { Customer } from "@/app/types";
-import { cookies } from "next/headers";
 import { GetSession } from "./authActions";
-import { redirect } from "next/dist/server/api-utils";
+import { collection } from "firebase/firestore";
 
 export const FetchAllCustomers = async (
-  limit: number = 16,
+  limit: number = 10,
   orderBy: string = "lastName",
   order: "asc" | "desc" = "asc",
   lastId?: string,
+  search?: string,
 ): Promise<{
   customers: Customer[];
   lastId: string | null;
@@ -24,7 +24,7 @@ export const FetchAllCustomers = async (
 
     let query = adminDb
       .collection("customers")
-      .orderBy(orderBy, order)
+      .orderBy(orderBy === "" ? "lastName" : orderBy, order)
       .limit(limit + 1);
 
     if (lastId) {
@@ -37,12 +37,21 @@ export const FetchAllCustomers = async (
 
     const hasMore = docs.length > limit;
 
-    const customers = docs
+    let customers = docs
       .slice(0, limit)
       .map((doc) => ({ id: doc.id, ...doc.data() }) as Customer);
 
+    if (search) {
+      customers = customers.filter(
+        (c) =>
+          c.firstName.toLowerCase().includes(search.toLowerCase()) ||
+          c.lastName.toLowerCase().includes(search.toLowerCase()),
+      );
+    }
+
     const lastVisible =
       customers.length > 0 ? customers[customers.length - 1].id : null;
+
     return { customers, lastId: lastVisible, hasMore };
   } catch (error) {
     console.error("Error fetching customers", error);
@@ -103,4 +112,12 @@ export const CreateNewCustomer = async (
     console.error("Error creating customer", error);
     throw error;
   }
+};
+
+export const FetchCustomerCount = async () => {
+  const snapshot = await adminDb.collection("customers").count().get();
+
+  const total = snapshot.data().count;
+
+  return total;
 };
