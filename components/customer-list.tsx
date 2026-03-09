@@ -64,10 +64,19 @@ const CustomerList = async ({
               <td className="text-left py-4 px-4">
                 <div>
                   <div className="font-bold">
-                    {customer.firstName} {customer.lastName}
+                    {orderBy === "lastName" ? (
+                      <span>
+                        {customer.lastName}, {customer.firstName}
+                      </span>
+                    ) : (
+                      <span>
+                        {customer.firstName} {customer.lastName}
+                      </span>
+                    )}
                   </div>
                 </div>
               </td>
+
               <td className="text-center ">{customer.email}</td>
               <td className="text-center">{customer.phone}</td>
               <td className="text-center">{customer.address}</td>
