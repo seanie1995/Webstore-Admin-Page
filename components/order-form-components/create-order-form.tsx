@@ -1,8 +1,11 @@
 "use client";
 
-import Form from "next/form";
-import { Customer, CustomerOption, Product, ProductOption } from "@/app/types";
-import { useState } from "react";
+import { CustomerOption, Order, ProductOption } from "@/app/types";
+import { ChangeEvent, Fragment, useState } from "react";
+import { Trash2 } from "lucide-react";
+import { CreateNewOrder } from "@/lib/orderActions";
+import { FetchCustomerById } from "@/lib/customerActions";
+import { useRouter } from "next/navigation";
 
 type CreateOrderProps = {
   customers: CustomerOption[];
@@ -10,26 +13,58 @@ type CreateOrderProps = {
 };
 
 const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
-  const handleSubmit = () => {
-    return "Hello";
-  };
+  const router = useRouter();
 
-  const [items, setItems] = useState([
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+
+  const [items, setItems] = useState<Order["items"]>([
     {
-      productId: "",
+      productId: 0,
       quantity: 1,
       price: 0,
     },
   ]);
 
-  const [formData, setFormData] = useState({
-    customerId: "",
-    customer: "",
-    orderDate: new Date(),
-    status: "pending",
-    total: "",
-    items: items,
-  });
+  const [selectedCustomer, setSelectedCustomer] =
+    useState<CustomerOption | null>(null);
+
+  const handleCreateNewOrder = async () => {
+    if (!selectedCustomer) return;
+
+    try {
+      const totalPrice = items.reduce(
+        (sum, i) => sum + i.price * i.quantity,
+        0,
+      );
+
+      const customerObject = await FetchCustomerById(selectedCustomer.id);
+
+      const order: Omit<Order, "id"> = {
+        customerId: selectedCustomer?.id,
+        customer: customerObject,
+        status: "pending",
+        total: totalPrice,
+        items: items,
+        orderDate: new Date().toISOString(),
+      };
+
+      await CreateNewOrder(order);
+      setStatus("success");
+    } catch (error) {
+      console.error("Failed to create new order");
+      setStatus("error");
+    } finally {
+      setTimeout(() => setStatus("idle"), 3000);
+    }
+  };
+
+  const handleCustomerChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedCustomerId = e.target.value;
+    const selectedCustomer =
+      customers.find((c) => c.id === selectedCustomerId) || null;
+
+    setSelectedCustomer(selectedCustomer);
+  };
 
   const handleIncrement = (index: number) =>
     setItems(
@@ -57,15 +92,23 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
 
     setItems(
       items.map((item, i) =>
-        i === index ? { ...item, price: selected.price } : item,
+        i === index
+          ? { ...item, productId: Number(selected.id), price: selected.price }
+          : item,
       ),
     );
   };
 
   const handleAddNewItem = () => {
-    const newItem = { productId: "", quantity: 1, price: 0 };
+    const newItem = { productId: 0, quantity: 1, price: 0 };
 
     const newArray = [...items, newItem];
+
+    setItems(newArray);
+  };
+
+  const handleDeleteItem = (indexToRemove: number) => {
+    const newArray = items.filter((_, index) => index !== indexToRemove);
 
     setItems(newArray);
   };
@@ -83,6 +126,7 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
             id="customerId"
             defaultValue={""}
             className="border rounded-xl px-2 py-4"
+            onChange={handleCustomerChange}
           >
             <option value="" disabled>
               -- Select Customer --
@@ -95,85 +139,73 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
           </select>
         </section>
         {/* Product Select */}
-        <div className="grid grid-cols-[1fr_auto_auto] gap-6 items-center">
+        <div className="grid grid-cols-[1fr_auto_auto] gap-x-6 gap-y-4 items-center">
           <label className="font-semibold text-lg">Products</label>
           <label className="font-semibold text-lg">Qty</label>
           <label className="font-semibold text-lg">Subtotal</label>
+
+          {items.map((item, index) => (
+            <Fragment key={index}>
+              <select
+                key={index}
+                defaultValue=""
+                className="border rounded-xl px-2 py-4"
+                onChange={(e) => handleProductChange(e, index)}
+              >
+                <option value="" disabled>
+                  -- Select Product --
+                </option>
+                {products.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.id} | {p.name}
+                  </option>
+                ))}
+              </select>
+
+              <div
+                key={`qty-${index}`}
+                className="flex items-center border border-gray-300 rounded-lg overflow-hidden"
+              >
+                <button
+                  type="button"
+                  onClick={() => handleDecrement(index)}
+                  disabled={item.quantity <= 1}
+                  className={`p-3 transition-colors focus:outline-none ${
+                    item.quantity <= 1
+                      ? "bg-gray-50 text-gray-300 cursor-not-allowed"
+                      : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                  }`}
+                >
+                  −
+                </button>
+                <input
+                  type="number"
+                  value={item.quantity}
+                  readOnly
+                  className="w-12 text-center border-none focus:ring-0 focus:outline-none py-1.5 bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleIncrement(index)}
+                  className="p-3 bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none"
+                >
+                  +
+                </button>
+              </div>
+
+              <span
+                key={`subtotal-${index}`}
+                className="font-bold text-lg text-center grid grid-cols-2 gap-2"
+              >
+                {(Number(item.quantity) * Number(item.price)).toFixed(2)}
+                <button type="button" onClick={() => handleDeleteItem(index)}>
+                  <Trash2 className="py-1 text-red-600 hover:text-red-800 hover:cursor-pointer " />
+                </button>
+              </span>
+            </Fragment>
+          ))}
         </div>
 
-        {items.map((i, index) => (
-          <section
-            key={index}
-            className="grid grid-cols-[1fr_auto_auto] gap-6 items-center"
-          >
-            <select
-              name="product"
-              id="productId"
-              defaultValue={""}
-              className="border rounded-xl px-2 py-4"
-              onChange={(e) => {
-                handleProductChange(e, index);
-              }}
-            >
-              <option value="" disabled>
-                -- Select Product --
-              </option>
-              {products.map((i) => (
-                <option key={i.id}>
-                  {i.id} | {i.name}
-                </option>
-              ))}
-            </select>
-
-            {/* Quantity Selector */}
-
-            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-fit">
-              <button
-                type="button"
-                onClick={() => handleDecrement(index)}
-                className={`p-3 transition-colors focus:outline-none ${
-                  items[index].quantity <= 1
-                    ? "bg-gray-50 text-gray-300 cursor-not-allowed"
-                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                }`}
-                aria-label="Decrease quantity"
-                disabled={items[index].quantity <= 1}
-              >
-                <span className="text-gray-700">−</span>
-              </button>
-              <input
-                type="number"
-                id="quantity"
-                value={items[index].quantity}
-                min="1"
-                readOnly
-                className="w-12 text-center border-none focus:ring-0 focus:outline-none py-1.5 bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              />
-              <button
-                type="button"
-                onClick={() => handleIncrement(index)}
-                className="p-3 bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none"
-                aria-label="Increase quantity"
-              >
-                <span className="text-gray-700">+</span>
-              </button>
-            </div>
-
-            {/* Total Price */}
-            <div className="ml-auto">
-              <input
-                type="number"
-                id="subtotal"
-                value={
-                  Number(items[index].quantity) * Number(items[index].price)
-                }
-                min="1"
-                readOnly
-                className=" text-center font-bold text-lg focus:outline-none py-1.5 bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              />
-            </div>
-          </section>
-        ))}
         <div className="text-center">
           <button
             onClick={handleAddNewItem}
@@ -183,24 +215,35 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
             + Add Another Item
           </button>
         </div>
+        <div className="grid-rows-2 flex flex-row justify-evenly">
+          <button
+            onClick={() => handleCreateNewOrder()}
+            type="button"
+            className="text-black w-1/3 bg-green-400 py-2 rounded-xl hover:bg-green-600 transition-all hover:cursor-pointer "
+          >
+            Create
+          </button>
+
+          <button
+            type="button"
+            onClick={() => router.push("/orders")}
+            className="text-black w-1/3  bg-red-400 py-2 rounded-xl hover:bg-red-600 transition-all hover:cursor-pointer "
+          >
+            Cancel
+          </button>
+        </div>
       </section>
-
-      {/*  <div className="grid-rows-2 flex flex-row justify-evenly">
-        <button
-          type="submit"
-          className="text-black w-1/3 bg-green-400 py-2 rounded-xl hover:bg-green-600 transition-all hover:cursor-pointer "
+      {status !== "idle" && (
+        <div
+          className={`fixed bottom-6 right-6 z-50 px-6 py-4 rounded-xl shadow-lg text-white font-semibold transition-all animate-bounce ${
+            status === "success" ? "bg-green-500" : "bg-red-500"
+          }`}
         >
-          Create
-        </button>
-
-        <button
-          type="button"
-          onClick={handleSubmit}
-          className="text-black w-1/3  bg-red-400 py-2 rounded-xl hover:bg-red-600 transition-all hover:cursor-pointer "
-        >
-          Cancel
-        </button>
-      </div> */}
+          {status === "success"
+            ? "✅ Order created successfully!"
+            : "❌ Failed to create order."}
+        </div>
+      )}
     </form>
   );
 };

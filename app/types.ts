@@ -76,6 +76,7 @@ export interface Order {
     quantity: number;
     price: number;
   }[];
+  notes?: string;
 }
 
 export type CustomerOption = {
