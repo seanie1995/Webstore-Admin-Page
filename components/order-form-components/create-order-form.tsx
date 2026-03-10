@@ -1,7 +1,7 @@
 "use client";
 
 import Form from "next/form";
-import { Customer, CustomerOption, ProductOption } from "@/app/types";
+import { Customer, CustomerOption, Product, ProductOption } from "@/app/types";
 import { useState } from "react";
 
 type CreateOrderProps = {
@@ -14,29 +14,67 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
     return "Hello";
   };
 
+  const [items, setItems] = useState([
+    {
+      productId: "",
+      quantity: 1,
+      price: 0,
+    },
+  ]);
+
   const [formData, setFormData] = useState({
     customerId: "",
     customer: "",
     orderDate: new Date(),
     status: "pending",
     total: "",
-    items: {
-      productId: "",
-      product: "",
-      quantity: "",
-      price: "",
-    },
+    items: items,
   });
 
-  const [quantity, setQuantity] = useState<number>(1);
+  const handleIncrement = (index: number) =>
+    setItems(
+      items.map((item, i) =>
+        i === index ? { ...item, quantity: Number(item.quantity) + 1 } : item,
+      ),
+    );
 
-  const handleIncrement = () => setQuantity(quantity + 1);
-  const handleDecrement = () => setQuantity(Math.max(1, quantity - 1));
+  const handleDecrement = (index: number) => {
+    setItems(
+      items.map((item, i) =>
+        i === index ? { ...item, quantity: Number(item.quantity) - 1 } : item,
+      ),
+    );
+  };
+
+  const handleProductChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    index: number,
+  ) => {
+    const selectedId = e.target.value.split(" | ")[0];
+    const selected = products.find((p) => selectedId === p.id);
+
+    if (!selected) return;
+
+    setItems(
+      items.map((item, i) =>
+        i === index ? { ...item, price: selected.price } : item,
+      ),
+    );
+  };
+
+  const handleAddNewItem = () => {
+    const newItem = { productId: "", quantity: 1, price: 0 };
+
+    const newArray = [...items, newItem];
+
+    setItems(newArray);
+  };
 
   return (
-    <form className="grid  border-neutral-400 p-12 rounded-xl">
-      <section className="  flex flex-col gap-6  border-neutral-400 p-12 rounded-xl ">
-        <article className="flex flex-col gap-6">
+    <form className="grid  border-neutral-400 p-12 rounded-xl ">
+      <section className="  flex flex-col gap-6  border-neutral-400 py-12 rounded-xl  px-28 border">
+        {/* Customer Select */}
+        <section className="flex flex-col gap-6">
           <label className="font-semibold text-lg" htmlFor="customerId">
             Customer
           </label>
@@ -55,17 +93,27 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
               </option>
             ))}
           </select>
-        </article>
-        <article className="flex flex-row gap-6">
-          <div className="flex flex-col gap-6">
-            <label className="font-semibold text-lg" htmlFor="productId">
-              Products
-            </label>
+        </section>
+        {/* Product Select */}
+        <div className="grid grid-cols-[1fr_auto_auto] gap-6 items-center">
+          <label className="font-semibold text-lg">Products</label>
+          <label className="font-semibold text-lg">Qty</label>
+          <label className="font-semibold text-lg">Subtotal</label>
+        </div>
+
+        {items.map((i, index) => (
+          <section
+            key={index}
+            className="grid grid-cols-[1fr_auto_auto] gap-6 items-center"
+          >
             <select
               name="product"
               id="productId"
               defaultValue={""}
               className="border rounded-xl px-2 py-4"
+              onChange={(e) => {
+                handleProductChange(e, index);
+              }}
             >
               <option value="" disabled>
                 -- Select Product --
@@ -76,49 +124,67 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
                 </option>
               ))}
             </select>
-          </div>
-          <div className="flex flex-col gap-6">
-            <label className="font-semibold text-lg ">Qty</label>
+
+            {/* Quantity Selector */}
+
             <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-fit">
               <button
-                onClick={handleDecrement}
-                className="p-3 bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none"
+                type="button"
+                onClick={() => handleDecrement(index)}
+                className={`p-3 transition-colors focus:outline-none ${
+                  items[index].quantity <= 1
+                    ? "bg-gray-50 text-gray-300 cursor-not-allowed"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                }`}
                 aria-label="Decrease quantity"
+                disabled={items[index].quantity <= 1}
               >
                 <span className="text-gray-700">−</span>
               </button>
               <input
                 type="number"
                 id="quantity"
-                value={quantity}
+                value={items[index].quantity}
                 min="1"
                 readOnly
                 className="w-12 text-center border-none focus:ring-0 focus:outline-none py-1.5 bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
               <button
-                onClick={handleIncrement}
+                type="button"
+                onClick={() => handleIncrement(index)}
                 className="p-3 bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none"
                 aria-label="Increase quantity"
               >
                 <span className="text-gray-700">+</span>
               </button>
             </div>
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="" className="font-semibold text-lg">
-              Subtotal
-            </label>
-            <input
-              type="number"
-              id="quantity"
-              value={formData.items.price}
-              min="1"
-              readOnly
-              className="w-12 text-center border-none focus:ring-0 focus:outline-none py-1.5 bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
-          </div>
-        </article>
+
+            {/* Total Price */}
+            <div className="ml-auto">
+              <input
+                type="number"
+                id="subtotal"
+                value={
+                  Number(items[index].quantity) * Number(items[index].price)
+                }
+                min="1"
+                readOnly
+                className=" text-center font-bold text-lg focus:outline-none py-1.5 bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
+          </section>
+        ))}
+        <div className="text-center">
+          <button
+            onClick={handleAddNewItem}
+            type="button"
+            className="border border-dotted p-4 rounded-xl w-full text-neutral-600 hover:text-neutral-800 hover:cursor-pointer transition-all"
+          >
+            + Add Another Item
+          </button>
+        </div>
       </section>
+
       {/*  <div className="grid-rows-2 flex flex-row justify-evenly">
         <button
           type="submit"
