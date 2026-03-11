@@ -75,6 +75,7 @@ export interface Order {
     product?: Product;
     quantity: number;
     price: number;
+    title?: string;
   }[];
   notes?: string;
 }

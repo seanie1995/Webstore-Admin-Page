@@ -4,6 +4,7 @@ import { adminDb } from "./firebaseAdmin";
 import { Order, Customer, Product } from "@/app/types";
 import { GetSession } from "./authActions";
 import { FieldPath } from "firebase-admin/firestore";
+import { getDatabase } from "firebase/database";
 
 export const CreateNewOrder = async (
   order: Omit<Order, "id">,
@@ -23,6 +24,55 @@ export const CreateNewOrder = async (
     };
   } catch (error) {
     console.error("Error creating order", error);
+    throw error;
+  }
+};
+
+export const UpdateOrder = async (
+  order: Omit<Order, "customerId" | "orderDate">,
+) => {
+  const session = GetSession();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const { id, ...data } = order;
+    await adminDb.collection("orders").doc(id).update(data);
+  } catch (error) {
+    console.error("Failed to update order:", error);
+    throw new Error("Failed to update order");
+  }
+};
+
+export const DeleteOrder = async (orderId: string) => {
+  const session = GetSession();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    await adminDb.collection("orders").doc(orderId).delete();
+  } catch (error) {
+    console.error("Failed To Delete order:", error);
+    throw error;
+  }
+};
+
+export const FetchOrderById = async (orderId: string) => {
+  const session = GetSession();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const doc = await adminDb.collection("orders").doc(orderId).get();
+    if (!doc.exists) {
+      throw new Error("Order not found");
+    }
+    return { id: doc.id, ...doc.data() } as Order;
+  } catch (error) {
+    console.error("Failed to fetch order:", error);
     throw error;
   }
 };

@@ -1,35 +1,33 @@
 "use client";
 
-import { CustomerOption, Order, ProductOption } from "@/app/types";
-import { ChangeEvent, Fragment, useState } from "react";
+import { Order, ProductOption } from "@/app/types";
+import { Fragment, useState } from "react";
 import { Trash2 } from "lucide-react";
-import { CreateNewOrder } from "@/lib/orderActions";
-import { FetchCustomerById } from "@/lib/customerActions";
-import { useRouter } from "next/navigation";
 
-type CreateOrderProps = {
-  customers: CustomerOption[];
+import { useRouter } from "next/navigation";
+import { UpdateOrder } from "@/lib/orderActions";
+
+type EditOrderProps = {
+  order: Order;
   products: ProductOption[];
 };
 
-const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
+const EditOrderForm = ({ order, products }: EditOrderProps) => {
   const router = useRouter();
+
+  const selectedOrderId = order.id;
 
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
 
-  const [items, setItems] = useState<Order["items"]>([
-    {
-      productId: 0,
-      quantity: 1,
-      price: 0,
-      title: "",
-    },
-  ]);
+  const [items, setItems] = useState(order.items);
 
-  const [selectedCustomer, setSelectedCustomer] =
-    useState<CustomerOption | null>(null);
+  type OrderStatus = "pending" | "shipped" | "delivered" | "cancelled";
 
-  const handleCreateNewOrder = async () => {
+  const [orderStatus, setOrderStatus] = useState<OrderStatus>(order.status);
+
+  const selectedCustomer = order.customer;
+
+  const handleUpdateOrder = async () => {
     if (!selectedCustomer) return;
 
     try {
@@ -38,33 +36,22 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
         0,
       );
 
-      const customerObject = await FetchCustomerById(selectedCustomer.id);
-
-      const order: Omit<Order, "id"> = {
-        customerId: selectedCustomer?.id,
-        customer: customerObject,
-        status: "pending",
+      const order: Omit<Order, "customerId" | "orderDate"> = {
+        id: selectedOrderId,
+        status: orderStatus,
         total: totalPrice,
         items: items,
-        orderDate: new Date().toISOString(),
       };
 
-      await CreateNewOrder(order);
+      await UpdateOrder(order);
       setStatus("success");
+      setTimeout(() => router.push("/orders"), 3000);
     } catch (error) {
-      console.error("Failed to create new order");
+      console.error("Failed to update order");
       setStatus("error");
     } finally {
       setTimeout(() => setStatus("idle"), 3000);
     }
-  };
-
-  const handleCustomerChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const selectedCustomerId = e.target.value;
-    const selectedCustomer =
-      customers.find((c) => c.id === selectedCustomerId) || null;
-
-    setSelectedCustomer(selectedCustomer);
   };
 
   const handleIncrement = (index: number) =>
@@ -122,8 +109,28 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
   return (
     <form className="grid  border-neutral-400 p-12 rounded-xl ">
       <section className="  flex flex-col gap-6  border-neutral-400 py-12 rounded-xl  px-28 border">
-        {/* Customer Select */}
-        <section className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center gap-2">
+            <label htmlFor="status" className="font-bold text-lg">
+              Set Order Status:
+            </label>
+            <select
+              name="status"
+              id="orderStatus"
+              value={orderStatus}
+              onChange={(e) => setOrderStatus(e.target.value as OrderStatus)}
+              className="p-2 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {["pending", "shipped", "delivered", "cancelled"].map(
+                (status) => (
+                  <option key={status} value={status}>
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </option>
+                ),
+              )}
+            </select>
+          </div>{" "}
+          {/* Customer Select */}
           <label className="font-semibold text-lg" htmlFor="customerId">
             Customer
           </label>
@@ -132,18 +139,13 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
             id="customerId"
             defaultValue={""}
             className="border rounded-xl px-2 py-4"
-            onChange={handleCustomerChange}
+            aria-readonly
           >
             <option value="" disabled>
-              -- Select Customer --
+              {order.customer?.firstName} {order.customer?.lastName}
             </option>
-            {customers.map((i) => (
-              <option key={i.id} value={i.id}>
-                {i.name} | {i.email}
-              </option>
-            ))}
           </select>
-        </section>
+        </div>
         {/* Product Select */}
         <div className="grid grid-cols-[1fr_auto_auto] gap-x-6 gap-y-4 items-center">
           <label className="font-semibold text-lg">Products</label>
@@ -154,12 +156,12 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
             <Fragment key={index}>
               <select
                 key={index}
-                defaultValue=""
+                value={item.title}
                 className="border rounded-xl px-2 py-4"
                 onChange={(e) => handleProductChange(e, index)}
               >
-                <option value="" disabled>
-                  -- Select Product --
+                <option value={item.title} disabled>
+                  {item.title}
                 </option>
                 {products.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -212,7 +214,7 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
           ))}
         </div>
 
-        <div className="text-center">
+        <div className="text-center flex flex-col gap-4">
           <button
             onClick={handleAddNewItem}
             type="button"
@@ -221,9 +223,10 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
             + Add Another Item
           </button>
         </div>
+
         <div className="grid-rows-2 flex flex-row justify-evenly">
           <button
-            onClick={() => handleCreateNewOrder()}
+            onClick={() => handleUpdateOrder()}
             type="button"
             className="text-black w-1/3 bg-green-400 py-2 rounded-xl hover:bg-green-600 transition-all hover:cursor-pointer "
           >
@@ -233,9 +236,9 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
           <button
             type="button"
             onClick={() => router.push("/orders")}
-            className="text-black w-1/3  bg-red-400 py-2 rounded-xl hover:bg-red-600 transition-all hover:cursor-pointer "
+            className="text-black w-1/3  bg-gray-400 py-2 rounded-xl hover:bg-gray-600 hover:text-white transition-all hover:cursor-pointer "
           >
-            Cancel
+            Return
           </button>
         </div>
       </section>
@@ -246,12 +249,12 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
           }`}
         >
           {status === "success"
-            ? "✅ Order created successfully!"
-            : "❌ Failed to create order."}
+            ? "✅ Order updated successfully!"
+            : "❌ Failed to update order."}
         </div>
       )}
     </form>
   );
 };
 
-export default CreateOrderForm;
+export default EditOrderForm;

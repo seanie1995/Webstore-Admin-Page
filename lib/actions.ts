@@ -63,15 +63,6 @@ export const FetchSingleProductById = async (id: string) => {
   return data;
 };
 
-/*  
-    "title",
-    "price",
-    "description",
-    "thumbnail",
-    "categoryId",
-    "brand",
-*/
-
 export const CreateProduct = async (formData: FormData) => {
   const session = GetSession();
 

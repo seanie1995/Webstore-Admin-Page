@@ -6,6 +6,7 @@ import CustomerSearchBar from "./customers-filter-components/customer-search";
 import CustomerPagination from "./customers-filter-components/customer-pagination";
 import CustomerSortSelect from "./customers-filter-components/customer-category-sortBy";
 import CustomerSortOrder from "./customers-filter-components/customer-sort-order";
+import Link from "next/link";
 
 const OrdersList = async ({
   searchParams,
@@ -89,14 +90,24 @@ const OrdersList = async ({
                 {new Date(order.orderDate).toLocaleDateString()}
               </td>
               <td
-                className={`text-center ${order.status === "pending" ? "text-orange-600" : "text-green-600"}`}
+                className={`text-center ${
+                  order.status === "pending"
+                    ? "text-orange-600"
+                    : order.status === "cancelled"
+                      ? "text-red-700"
+                      : order.status === "shipped"
+                        ? "text-yellow-600"
+                        : "text-green-600"
+                }`}
               >
                 {order.status}
               </td>
 
               <td className="px-4">
                 <div className="flex flex-row justify-end gap-4">
-                  <SquarePen className="text-purple-700" />
+                  <Link href={`/orders/edit/${order.id}`}>
+                    <SquarePen className="text-purple-700" />
+                  </Link>
                   <Trash2 className="text-red-600" />
                 </div>
               </td>
