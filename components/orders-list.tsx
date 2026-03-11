@@ -7,6 +7,7 @@ import CustomerPagination from "./customers-filter-components/customer-paginatio
 import CustomerSortSelect from "./customers-filter-components/customer-category-sortBy";
 import CustomerSortOrder from "./customers-filter-components/customer-sort-order";
 import Link from "next/link";
+import { DeleteOrderForm } from "./order-form-components/delete-order.form";
 
 const OrdersList = async ({
   searchParams,
@@ -96,7 +97,7 @@ const OrdersList = async ({
                     : order.status === "cancelled"
                       ? "text-red-700"
                       : order.status === "shipped"
-                        ? "text-yellow-600"
+                        ? "text-yellow-800"
                         : "text-green-600"
                 }`}
               >
@@ -108,7 +109,7 @@ const OrdersList = async ({
                   <Link href={`/orders/edit/${order.id}`}>
                     <SquarePen className="text-purple-700" />
                   </Link>
-                  <Trash2 className="text-red-600" />
+                  <DeleteOrderForm id={order.id} />
                 </div>
               </td>
             </tr>

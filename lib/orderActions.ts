@@ -5,6 +5,8 @@ import { Order, Customer, Product } from "@/app/types";
 import { GetSession } from "./authActions";
 import { FieldPath } from "firebase-admin/firestore";
 import { getDatabase } from "firebase/database";
+import { Form } from "lucide-react";
+import { revalidatePath } from "next/cache";
 
 export const CreateNewOrder = async (
   order: Omit<Order, "id">,
@@ -45,18 +47,22 @@ export const UpdateOrder = async (
   }
 };
 
-export const DeleteOrder = async (orderId: string) => {
+export const DeleteOrder = async (formData: FormData) => {
   const session = GetSession();
   if (!session) {
     throw new Error("Unauthorized");
   }
 
+  const id = formData.get("id") as string;
+
   try {
-    await adminDb.collection("orders").doc(orderId).delete();
+    await adminDb.collection("orders").doc(id).delete();
   } catch (error) {
     console.error("Failed To Delete order:", error);
     throw error;
   }
+
+  revalidatePath("");
 };
 
 export const FetchOrderById = async (orderId: string) => {

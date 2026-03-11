@@ -230,7 +230,7 @@ const EditOrderForm = ({ order, products }: EditOrderProps) => {
             type="button"
             className="text-black w-1/3 bg-green-400 py-2 rounded-xl hover:bg-green-600 transition-all hover:cursor-pointer "
           >
-            Create
+            Update
           </button>
 
           <button

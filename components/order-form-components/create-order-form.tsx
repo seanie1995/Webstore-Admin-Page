@@ -51,6 +51,7 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
 
       await CreateNewOrder(order);
       setStatus("success");
+      setTimeout(() => router.push("/orders"), 3000);
     } catch (error) {
       console.error("Failed to create new order");
       setStatus("error");
@@ -233,9 +234,9 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
           <button
             type="button"
             onClick={() => router.push("/orders")}
-            className="text-black w-1/3  bg-red-400 py-2 rounded-xl hover:bg-red-600 transition-all hover:cursor-pointer "
+            className="text-black w-1/3  bg-gray-400 py-2 rounded-xl hover:bg-gray-600 hover:text-white transition-all hover:cursor-pointer "
           >
-            Cancel
+            Return
           </button>
         </div>
       </section>
