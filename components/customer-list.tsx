@@ -5,6 +5,8 @@ import CustomerPagination from "./customers-filter-components/customer-paginatio
 import CustomerSearchBar from "./customers-filter-components/customer-search";
 import CustomerSortSelect from "./customers-filter-components/customer-category-sortBy";
 import CustomerSortOrder from "./customers-filter-components/customer-sort-order";
+import Link from "next/link";
+import { DeleteCustomerForm } from "./customer-form-components/delete-customer-form";
 
 const CustomerList = async ({
   searchParams,
@@ -85,8 +87,11 @@ const CustomerList = async ({
 
               <td className="px-4">
                 <div className="flex flex-row justify-end gap-4">
-                  <SquarePen className="text-purple-700" />
-                  <Trash2 className="text-red-600" />
+                  <Link href={`/customers/edit/${customer.id}`}>
+                    <SquarePen className="text-purple-700" />
+                  </Link>
+
+                  <DeleteCustomerForm id={customer.id} />
                 </div>
               </td>
             </tr>
