@@ -47,10 +47,7 @@ export const FetchAllOrders = async (
   try {
     let query = adminDb
       .collection("orders")
-      .orderBy(
-        orderBy === "id" ? FieldPath.documentId() : orderBy, // ✅
-        order,
-      )
+      .orderBy(orderBy === "id" ? FieldPath.documentId() : orderBy, order)
       .limit(limit + 1);
 
     if (lastId) {
@@ -73,7 +70,8 @@ export const FetchAllOrders = async (
         (o) =>
           o.customer?.firstName.toLowerCase().includes(search.toLowerCase()) ||
           o.customer?.lastName.toLowerCase().includes(search.toLowerCase()) ||
-          o.customer?.email.toLowerCase().includes(search.toLowerCase()),
+          o.customer?.email.toLowerCase().includes(search.toLowerCase()) ||
+          o.id.toLowerCase().includes(search.toLowerCase()),
       );
     }
 

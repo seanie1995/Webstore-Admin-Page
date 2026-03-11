@@ -2,7 +2,6 @@ import { Customer } from "@/app/types";
 import { SquarePen, Trash2 } from "lucide-react";
 import { FetchAllCustomers, FetchCustomerCount } from "@/lib/customerActions";
 import CustomerPagination from "./customers-filter-components/customer-pagination";
-import LimitSelector from "./product-filter-components/limit-select";
 import CustomerSearchBar from "./customers-filter-components/customer-search";
 import CustomerSortSelect from "./customers-filter-components/customer-category-sortBy";
 import CustomerSortOrder from "./customers-filter-components/customer-sort-order";
@@ -45,7 +44,7 @@ const CustomerList = async ({
     <section className="p-8">
       <div className="p-6 flex flex-row gap-4">
         <CustomerSearchBar />
-        <CustomerSortSelect />
+        <CustomerSortSelect isCustomerList={true} />
         <CustomerSortOrder />
       </div>
       <table className="w-full rounded-lg overflow-hidden border-neutral-400 table-fixed bg-white ">
@@ -95,7 +94,11 @@ const CustomerList = async ({
         </tbody>
       </table>
 
-      <CustomerPagination hasMore={hasMore} totalCustomers={customerCount} />
+      <CustomerPagination
+        hasMore={hasMore}
+        total={customerCount}
+        displayCount={customers.length}
+      />
     </section>
   );
 };
