@@ -3,6 +3,7 @@ import { adminDb } from "./firebaseAdmin";
 import { Customer } from "@/app/types";
 import { GetSession } from "./authActions";
 import { collection } from "firebase/firestore";
+import { revalidatePath } from "next/cache";
 
 export const FetchAllCustomers = async (
   limit: number = 10,
@@ -87,14 +88,17 @@ export const FetchCustomerById = async (id: string): Promise<Customer> => {
   }
 };
 
-export const DeleteCustomer = async (id: string): Promise<void> => {
+export const DeleteCustomer = async (formData: FormData) => {
   try {
     const session = GetSession();
+
+    const id = formData.get("id") as string;
 
     if (!session) {
       throw new Error("Unauthorized");
     }
     await adminDb.collection("customers").doc(id).delete();
+    revalidatePath("");
   } catch (error) {
     console.error("Failed to delete customer:", error);
     throw error;
@@ -128,4 +132,27 @@ export const FetchCustomerCount = async () => {
   const total = snapshot.data().count;
 
   return total;
+};
+
+export const EditCustomer = async (
+  id: string,
+  customer: Omit<Customer, "id">,
+): Promise<Customer> => {
+  try {
+    const session = GetSession();
+
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+
+    await adminDb.collection("customers").doc(id).update(customer);
+
+    return {
+      id,
+      ...customer,
+    };
+  } catch (error) {
+    console.error("Error editing customer", error);
+    throw error;
+  }
 };
