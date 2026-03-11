@@ -72,7 +72,15 @@ export const FetchCustomerById = async (id: string): Promise<Customer> => {
       throw new Error("Customer not found");
     }
 
-    return { id: doc.id, ...doc.data() } as Customer;
+    const data = doc.data()!;
+    return {
+      id: doc.id,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+    };
   } catch (error) {
     console.error("Failed to fetch customer:", error);
     throw error;

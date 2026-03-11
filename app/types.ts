@@ -64,16 +64,30 @@ export interface Customer {
 }
 
 export interface Order {
-  id: number;
+  id: string;
   customerId: string;
   customer?: Customer;
   orderDate: string;
-  status: "pending" | "shipped" | "delivered";
+  status: "pending" | "shipped" | "delivered" | "cancelled";
   total: number;
   items: {
     productId: number;
     product?: Product;
     quantity: number;
     price: number;
+    title?: string;
   }[];
+  notes?: string;
 }
+
+export type CustomerOption = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+export type ProductOption = {
+  id: string;
+  name: string;
+  price: number;
+};

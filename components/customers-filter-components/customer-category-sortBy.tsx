@@ -3,7 +3,11 @@
 import React from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
-const CustomerSortSelect = () => {
+const CustomerSortSelect = ({
+  isCustomerList,
+}: {
+  isCustomerList: boolean;
+}) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathName = usePathname();
@@ -18,12 +22,21 @@ const CustomerSortSelect = () => {
     router.push(url);
   };
 
-  const sortBy = [
+  const customerSortBy = [
     { title: "firstName", text: "First Name" },
     { title: "lastName", text: "Last Name" },
     { title: "email", text: "Email" },
     { title: "address", text: "Address" },
   ];
+
+  const orderSortBy = [
+    { title: "customer.firstName", text: "First Name" },
+    { title: "customer.lastName", text: "Last Name" },
+    { title: "customer.email", text: "Email" },
+    { title: "id", text: "Order Id" },
+  ];
+
+  const displaySortBy = isCustomerList ? customerSortBy : orderSortBy;
 
   return (
     <select
@@ -34,7 +47,7 @@ const CustomerSortSelect = () => {
       <option value={""} disabled>
         Order By
       </option>
-      {sortBy.map((i, index) => (
+      {displaySortBy.map((i, index) => (
         <option value={i.title} key={index}>
           {i.text}
         </option>

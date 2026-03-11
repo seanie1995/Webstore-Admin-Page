@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 
 import Link from "next/link";
 
@@ -9,10 +8,12 @@ const PAGE_SIZE = 15;
 
 const CustomerPagination = ({
   hasMore,
-  totalCustomers,
+  total,
+  displayCount,
 }: {
   hasMore: boolean | null;
-  totalCustomers: number;
+  total: number;
+  displayCount?: number | null;
 }) => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
@@ -22,7 +23,7 @@ const CustomerPagination = ({
   const loadAll = () => {
     const params = new URLSearchParams(searchParams.toString());
 
-    params.set("limit", totalCustomers.toString());
+    params.set("limit", total.toString());
 
     return `${pathName}?${params.toString()}`;
   };
@@ -54,7 +55,7 @@ const CustomerPagination = ({
   return (
     <div className="flex gap-4 p-4  border-b border-l border-r border-neutral-200 rounded-b-xl justify-between">
       <span>
-        Customers {currentLimit} of {totalCustomers}
+        Customers {displayCount} of {total}
       </span>
       <div className="flex gap-4">
         <Link

@@ -9,11 +9,13 @@ import { Login } from "@/lib/authActions";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setError(null); // Reset error state
     const formData = new FormData(e.currentTarget);
 
     const email = formData.get("email") as string;
@@ -29,6 +31,9 @@ const LoginForm = () => {
       router.refresh();
     } catch (error) {
       console.error("Login error:", error);
+      setError("Wrong email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,6 +74,8 @@ const LoginForm = () => {
             className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
+
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
         <button
           type="submit"
