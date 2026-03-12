@@ -161,7 +161,7 @@ export const UpdateProduct = async (formData: FormData) => {
 
   const data = await res.json();
 
-  revalidatePath("/");
+  revalidatePath("/products");
   redirect("/");
 };
 

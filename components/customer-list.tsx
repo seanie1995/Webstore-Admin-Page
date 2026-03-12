@@ -44,7 +44,7 @@ const CustomerList = async ({
 
   return (
     <section className="p-8">
-      <div className="p-6 flex flex-row gap-4">
+      <div className="p-6 flex flex-row gap-4 ">
         <CustomerSearchBar />
         <CustomerSortSelect isCustomerList={true} />
         <CustomerSortOrder />

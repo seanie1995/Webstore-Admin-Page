@@ -124,7 +124,7 @@ const EditForm = ({ product, categories }: EditFormProps) => {
 
         <button
           type="button"
-          onClick={router.back}
+          onClick={() => router.push("/products")}
           className="text-black w-1/3  bg-red-400 py-2 rounded-xl hover:bg-red-600 transition-all hover:cursor-pointer "
         >
           Cancel

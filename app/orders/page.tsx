@@ -4,7 +4,7 @@ import OrdersList from "@/components/orders-list";
 
 const OrderPage = (params: PageProps<"/">) => {
   return (
-    <main className="bg-gray-100">
+    <main className="bg-gray-100 h-full">
       <OrderHeader />
       <section>
         <OrdersList searchParams={params.searchParams} />
