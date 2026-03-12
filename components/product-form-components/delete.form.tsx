@@ -1,5 +1,6 @@
 import Form from "next/form";
 import { deleteProduct, deleteProductBind } from "@/lib/actions";
+import { Trash2 } from "lucide-react";
 
 // Here we pass the formData along and get the id from that in the action
 export function DeleteForm({ id }: { id: string }) {
@@ -7,7 +8,7 @@ export function DeleteForm({ id }: { id: string }) {
     <Form action={deleteProduct}>
       <input hidden readOnly name="id" value={id} />
       <button className="hover:cursor-pointer" type="submit">
-        Delete
+        <Trash2 className="text-red-600" />
       </button>
     </Form>
   );

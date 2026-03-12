@@ -64,7 +64,7 @@
       "id": 2,
       "title": "Eyeshadow Palette with Mirror",
       "description": "The Eyeshadow Palette with Mirror offers a versatile range of eyeshadow shades for creating stunning eye looks. With a built-in mirror, it's convenient for on-the-go makeup application.",
-      "price": 19.99,
+      "price": 19,
       "discountPercentage": 18.19,
       "rating": 2.86,
       "stock": 34,
@@ -11684,10 +11684,10 @@
       "id": 193,
       "title": "Watch Gold for Women",
       "description": "The Gold Women's Watch is a stunning accessory that combines luxury and style. Featuring a gold-plated case and a chic design, it adds a touch of glamour to any outfit.",
-      "price": 799.99,
+      "price": 799,
       "discountPercentage": 18.34,
       "rating": 4.24,
-      "stock": 0,
+      "stock": 15,
       "tags": [
         "watches",
         "women's watches"
@@ -11702,7 +11702,7 @@
       },
       "warrantyInformation": "2 year warranty",
       "shippingInformation": "Ships in 1-2 business days",
-      "availabilityStatus": "Out of Stock",
+      "availabilityStatus": "Low Stock",
       "reviews": [
         {
           "rating": 4,
@@ -11803,6 +11803,38 @@
       ],
       "thumbnail": "https://cdn.dummyjson.com/product-images/womens-watches/women's-wrist-watch/thumbnail.webp",
       "categoryId": 24
+    },
+    {
+      "title": "Playstation 5",
+      "brand": "Sony",
+      "description": "Gaming Console",
+      "thumbnail": "https://www.google.com",
+      "price": 499,
+      "categoryId": 25,
+      "stock": 15,
+      "availabilityStatus": "Low Stock",
+      "meta": {
+        "createdAt": "2026-03-04T10:12:52.963Z",
+        "updatedAt": "2026-03-04T10:12:52.963Z"
+      },
+      "id": 196,
+      "sku": "HOM-SON-PLA-196"
+    },
+    {
+      "title": "Tree Revenants",
+      "brand": "Games Workshop",
+      "description": "Plastic Miniatures",
+      "thumbnail": "https://www.google.com",
+      "price": 399,
+      "categoryId": 26,
+      "stock": 35,
+      "availabilityStatus": "In Stock",
+      "meta": {
+        "createdAt": "2026-03-12T08:19:31.921Z",
+        "updatedAt": "2026-03-12T08:19:31.921Z"
+      },
+      "id": 197,
+      "sku": "HOB-GAM-TRE-197"
     }
   ],
   "categories": [
@@ -11948,6 +11980,18 @@
       "id": 24,
       "name": "Women's Watches",
       "slug": "womens-watches",
+      "image": "https://placehold.co/600x400"
+    },
+    {
+      "id": 25,
+      "name": "Gaming",
+      "slug": "gaming",
+      "image": "https://placehold.co/600x400"
+    },
+    {
+      "id": 26,
+      "name": "Hobby",
+      "slug": "hobby",
       "image": "https://placehold.co/600x400"
     }
   ]

@@ -1,11 +1,12 @@
-import React from "react";
-import { Trash2, SquarePen } from "lucide-react";
+import { SquarePen } from "lucide-react";
 import { FetchAllCategories, FetchAllProducts } from "@/lib/actions";
-import LimitSelector from "./filter-components/limit-select";
-import Pagination from "./filter-components/pagination";
+import LimitSelector from "./product-filter-components/limit-select";
+import Pagination from "./product-filter-components/pagination";
 import Link from "next/link";
-import CategorySelect from "./filter-components/category-select";
-import SearchBar from "./filter-components/search-bar";
+import CategorySelect from "./product-filter-components/category-select";
+import SearchBar from "./product-filter-components/search-bar";
+import Statistics from "./statistics";
+import { DeleteForm } from "./product-form-components/delete.form";
 
 const ProductList = async ({
   searchParams,
@@ -43,27 +44,29 @@ const ProductList = async ({
   const totalPages = res.pages;
 
   return (
-    <>
+    <section className="p-8">
+      <Statistics />
+
       <div className="p-6 flex flex-row gap-4">
         <LimitSelector />
         <SearchBar />
         <CategorySelect categories={categories} />
       </div>
 
-      <table className="w-full rounded-2xl  border-neutral-400 border">
-        <thead className="bg-neutral-100">
+      <table className="w-full rounded-lg overflow-hidden border-neutral-400 table-fixed bg-white ">
+        <thead className="bg-neutral-200">
           <tr className=" text-sm text-neutral-600">
-            <th className="py-4 ">Product</th>
+            <th className="py-4 w-[30%]">Product</th>
             <th>Category</th>
             <th>Price</th>
             <th>Stock</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th className="w-[10%]">Actions</th>
           </tr>
         </thead>
         <tbody>
           {allProducts.map((product) => (
-            <tr key={product.id} className="border border-neutral-400  text-sm">
+            <tr key={product.id} className="border border-neutral-200  text-sm">
               <td className="text-left py-4 px-4">
                 <div>
                   <div className="font-bold">{product.title}</div>
@@ -72,7 +75,7 @@ const ProductList = async ({
               </td>
               <td className="text-center ">{product.category?.name}</td>
               <td className="text-center">{product.price}</td>
-              <td className="text-center">{product.availabilityStatus}</td>
+              <td className="text-center">{product.stock}</td>
               <td
                 className={`text-center ${product.availabilityStatus === `In Stock` ? "text-green-600" : product.availabilityStatus === `Low Stock` ? `text-orange-600` : `text-red-700`}`}
               >
@@ -80,11 +83,10 @@ const ProductList = async ({
               </td>
               <td className="px-4">
                 <div className="flex flex-row justify-end gap-4">
-                  <Link href={"/edit-page"}>
+                  <Link href={`/products/edit/${product.id}`}>
                     <SquarePen className="text-purple-700" />
                   </Link>
-
-                  <Trash2 className="text-red-600" />
+                  <DeleteForm id={product?.id.toString()} />
                 </div>
               </td>
             </tr>
@@ -92,7 +94,7 @@ const ProductList = async ({
         </tbody>
       </table>
       <Pagination totalPages={totalPages} />
-    </>
+    </section>
   );
 };
 

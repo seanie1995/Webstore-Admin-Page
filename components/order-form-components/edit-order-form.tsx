@@ -1,0 +1,260 @@
+"use client";
+
+import { Order, ProductOption } from "@/app/types";
+import { Fragment, useState } from "react";
+import { Trash2 } from "lucide-react";
+
+import { useRouter } from "next/navigation";
+import { UpdateOrder } from "@/lib/orderActions";
+
+type EditOrderProps = {
+  order: Order;
+  products: ProductOption[];
+};
+
+const EditOrderForm = ({ order, products }: EditOrderProps) => {
+  const router = useRouter();
+
+  const selectedOrderId = order.id;
+
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+
+  const [items, setItems] = useState(order.items);
+
+  type OrderStatus = "pending" | "shipped" | "delivered" | "cancelled";
+
+  const [orderStatus, setOrderStatus] = useState<OrderStatus>(order.status);
+
+  const selectedCustomer = order.customer;
+
+  const handleUpdateOrder = async () => {
+    if (!selectedCustomer) return;
+
+    try {
+      const totalPrice = items.reduce(
+        (sum, i) => sum + i.price * i.quantity,
+        0,
+      );
+
+      const order: Omit<Order, "customerId" | "orderDate"> = {
+        id: selectedOrderId,
+        status: orderStatus,
+        total: totalPrice,
+        items: items,
+      };
+
+      await UpdateOrder(order);
+      setStatus("success");
+      setTimeout(() => router.push("/orders"), 1000);
+    } catch (error) {
+      console.error("Failed to update order");
+      setStatus("error");
+    } finally {
+      setTimeout(() => setStatus("idle"), 3000);
+    }
+  };
+
+  const handleIncrement = (index: number) =>
+    setItems(
+      items.map((item, i) =>
+        i === index ? { ...item, quantity: Number(item.quantity) + 1 } : item,
+      ),
+    );
+
+  const handleDecrement = (index: number) => {
+    setItems(
+      items.map((item, i) =>
+        i === index ? { ...item, quantity: Number(item.quantity) - 1 } : item,
+      ),
+    );
+  };
+
+  const handleProductChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    index: number,
+  ) => {
+    const selectedId = e.target.value.split(" | ")[0];
+    const selected = products.find((p) => selectedId === p.id);
+
+    if (!selected) return;
+
+    setItems(
+      items.map((item, i) =>
+        i === index
+          ? {
+              ...item,
+              productId: Number(selected.id),
+              price: selected.price,
+              title: selected.name,
+            }
+          : item,
+      ),
+    );
+  };
+
+  const handleAddNewItem = () => {
+    const newItem = { productId: 0, quantity: 1, price: 0 };
+
+    const newArray = [...items, newItem];
+
+    setItems(newArray);
+  };
+
+  const handleDeleteItem = (indexToRemove: number) => {
+    const newArray = items.filter((_, index) => index !== indexToRemove);
+
+    setItems(newArray);
+  };
+
+  return (
+    <form className="grid  border-neutral-400 p-12 rounded-xl ">
+      <section className="  flex flex-col gap-6  border-neutral-400 py-12 rounded-xl  px-28 border">
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center gap-2">
+            <label htmlFor="status" className="font-bold text-lg">
+              Set Order Status:
+            </label>
+            <select
+              name="status"
+              id="orderStatus"
+              value={orderStatus}
+              onChange={(e) => setOrderStatus(e.target.value as OrderStatus)}
+              className="p-2 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {["pending", "shipped", "delivered", "cancelled"].map(
+                (status) => (
+                  <option key={status} value={status}>
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </option>
+                ),
+              )}
+            </select>
+          </div>{" "}
+          {/* Customer Select */}
+          <label className="font-semibold text-lg" htmlFor="customerId">
+            Customer
+          </label>
+          <select
+            name="customer"
+            id="customerId"
+            defaultValue={""}
+            className="border rounded-xl px-2 py-4"
+            aria-readonly
+          >
+            <option value="" disabled>
+              {order.customer?.firstName} {order.customer?.lastName}
+            </option>
+          </select>
+        </div>
+        {/* Product Select */}
+        <div className="grid grid-cols-[1fr_auto_auto] gap-x-6 gap-y-4 items-center">
+          <label className="font-semibold text-lg">Products</label>
+          <label className="font-semibold text-lg">Qty</label>
+          <label className="font-semibold text-lg">Subtotal</label>
+
+          {items.map((item, index) => (
+            <Fragment key={index}>
+              <select
+                key={index}
+                value={item.title}
+                className="border rounded-xl px-2 py-4"
+                onChange={(e) => handleProductChange(e, index)}
+              >
+                <option value={item.title} disabled>
+                  {item.title}
+                </option>
+                {products.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.id} | {p.name}
+                  </option>
+                ))}
+              </select>
+
+              <div
+                key={`qty-${index}`}
+                className="flex items-center border border-gray-300 rounded-lg overflow-hidden"
+              >
+                <button
+                  type="button"
+                  onClick={() => handleDecrement(index)}
+                  disabled={item.quantity <= 1}
+                  className={`p-3 transition-colors focus:outline-none ${
+                    item.quantity <= 1
+                      ? "bg-gray-50 text-gray-300 cursor-not-allowed"
+                      : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                  }`}
+                >
+                  −
+                </button>
+                <input
+                  type="number"
+                  value={item.quantity}
+                  readOnly
+                  className="w-12 text-center border-none focus:ring-0 focus:outline-none py-1.5 bg-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleIncrement(index)}
+                  className="p-3 bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none"
+                >
+                  +
+                </button>
+              </div>
+
+              <span
+                key={`subtotal-${index}`}
+                className="font-bold text-lg text-center grid grid-cols-2 gap-2"
+              >
+                {(Number(item.quantity) * Number(item.price)).toFixed(2)}
+                <button type="button" onClick={() => handleDeleteItem(index)}>
+                  <Trash2 className="py-1 text-red-600 hover:text-red-800 hover:cursor-pointer " />
+                </button>
+              </span>
+            </Fragment>
+          ))}
+        </div>
+
+        <div className="text-center flex flex-col gap-4">
+          <button
+            onClick={handleAddNewItem}
+            type="button"
+            className="border border-dotted p-4 rounded-xl w-full text-neutral-600 hover:text-neutral-800 hover:cursor-pointer transition-all"
+          >
+            + Add Another Item
+          </button>
+        </div>
+
+        <div className="grid-rows-2 flex flex-row justify-evenly">
+          <button
+            onClick={() => handleUpdateOrder()}
+            type="button"
+            className="text-black w-1/3 bg-green-400 py-2 rounded-xl hover:bg-green-600 transition-all hover:cursor-pointer "
+          >
+            Update
+          </button>
+
+          <button
+            type="button"
+            onClick={() => router.push("/orders")}
+            className="text-black w-1/3  bg-gray-400 py-2 rounded-xl hover:bg-gray-600 hover:text-white transition-all hover:cursor-pointer "
+          >
+            Return
+          </button>
+        </div>
+      </section>
+      {status !== "idle" && (
+        <div
+          className={`fixed bottom-6 right-6 z-50 px-6 py-4 rounded-xl shadow-lg text-white font-semibold transition-all animate-bounce ${
+            status === "success" ? "bg-green-500" : "bg-red-500"
+          }`}
+        >
+          {status === "success"
+            ? "✅ Order updated successfully!"
+            : "❌ Failed to update order."}
+        </div>
+      )}
+    </form>
+  );
+};
+
+export default EditOrderForm;
