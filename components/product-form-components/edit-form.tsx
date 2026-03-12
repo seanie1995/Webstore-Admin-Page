@@ -15,10 +15,10 @@ const EditForm = ({ product, categories }: EditFormProps) => {
   return (
     <Form
       action={UpdateProduct}
-      className="grid  bg-neutral-200 border-neutral-400 p-12 rounded-xl"
+      className="grid border  border-neutral-400 p-12 rounded-xl"
     >
       <input readOnly name="id" value={product.id} />
-      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center bg-neutral-200 border-neutral-400 p-12 rounded-xl ">
+      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center  border-neutral-400 p-12 rounded-xl ">
         <label htmlFor="title" className="font-semibold">
           Title
         </label>
