@@ -2,10 +2,10 @@ import { Order } from "@/app/types";
 import { SquarePen, Trash2 } from "lucide-react";
 
 import { FetchAllOrders } from "@/lib/orderActions";
-import CustomerSearchBar from "./customers-filter-components/customer-search";
-import CustomerPagination from "./customers-filter-components/customer-pagination";
-import CustomerSortSelect from "./customers-filter-components/customer-category-sortBy";
-import CustomerSortOrder from "./customers-filter-components/customer-sort-order";
+import CustomerSearchBar from "./firebase-filter-components/firebase-search";
+import CustomerPagination from "./firebase-filter-components/firebase-pagination";
+import CustomerSortSelect from "./firebase-filter-components/firebase-category-sortby";
+import CustomerSortOrder from "./firebase-filter-components/firebase-sort-order";
 import Link from "next/link";
 import { DeleteOrderForm } from "./order-form-components/delete-order.form";
 
