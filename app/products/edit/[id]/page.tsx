@@ -15,10 +15,17 @@ const EditPage = async ({ params }: EditPageProps) => {
   const product: Product = await FetchSingleProductById(id);
   const categories = await FetchAllCategories();
 
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString();
+
   return (
-    <>
+    <main className="p-8">
+      <header className="flex flex-row justify-between align-middle mb-8">
+        <span className="text-4xl">Edit Product</span>
+        <span className="text-2xl">{formattedDate}</span>
+      </header>
       <EditForm product={product} categories={categories} />
-    </>
+    </main>
   );
 };
 

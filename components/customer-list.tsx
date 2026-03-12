@@ -1,10 +1,10 @@
 import { Customer } from "@/app/types";
 import { SquarePen, Trash2 } from "lucide-react";
 import { FetchAllCustomers, FetchCustomerCount } from "@/lib/customerActions";
-import CustomerPagination from "./customers-filter-components/customer-pagination";
-import CustomerSearchBar from "./customers-filter-components/customer-search";
-import CustomerSortSelect from "./customers-filter-components/customer-category-sortBy";
-import CustomerSortOrder from "./customers-filter-components/customer-sort-order";
+import CustomerPagination from "./firebase-filter-components/firebase-pagination";
+import CustomerSearchBar from "./firebase-filter-components/firebase-search";
+import CustomerSortSelect from "./firebase-filter-components/firebase-category-sortby";
+import CustomerSortOrder from "./firebase-filter-components/firebase-sort-order";
 import Link from "next/link";
 import { DeleteCustomerForm } from "./customer-form-components/delete-customer-form";
 

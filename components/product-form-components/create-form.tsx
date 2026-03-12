@@ -1,9 +1,14 @@
 "use client";
+import { Category } from "@/app/types";
 import { CreateProduct } from "@/lib/actions";
 import Form from "next/form";
 import { useRouter } from "next/navigation";
 
-const CreateForm = () => {
+type CreateFormProps = {
+  categories: Category[];
+};
+
+const CreateForm = ({ categories }: CreateFormProps) => {
   const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
@@ -19,9 +24,9 @@ const CreateForm = () => {
   return (
     <Form
       action={handleSubmit}
-      className="grid  bg-neutral-200 border-neutral-400 p-12 rounded-xl"
+      className="grid  border border-neutral-400 p-12 rounded-xl"
     >
-      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center bg-neutral-200 border-neutral-400 p-12 rounded-xl ">
+      <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center  border-neutral-400 p-12 rounded-xl ">
         <label className="font-semibold" htmlFor="title">
           Title
         </label>
@@ -66,7 +71,7 @@ const CreateForm = () => {
           name="stock"
           required
         />
-        <label className="font-semibold" htmlFor="categoryId">
+        {/* <label className="font-semibold" htmlFor="categoryId">
           Category ID
         </label>
         <input
@@ -75,7 +80,20 @@ const CreateForm = () => {
           id="categoryId"
           name="categoryId"
           required
-        />
+        /> */}
+        <label className="font-semibold" htmlFor="categoryId">
+          Category ID
+        </label>
+        <select id="category" name="categoryId" defaultValue={""} required>
+          <option value="" disabled>
+            Select a category
+          </option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
         <label className="font-semibold" htmlFor="description">
           Description
         </label>
