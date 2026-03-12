@@ -45,7 +45,7 @@ const EditOrderForm = ({ order, products }: EditOrderProps) => {
 
       await UpdateOrder(order);
       setStatus("success");
-      setTimeout(() => router.push("/orders"), 3000);
+      setTimeout(() => router.push("/orders"), 1000);
     } catch (error) {
       console.error("Failed to update order");
       setStatus("error");

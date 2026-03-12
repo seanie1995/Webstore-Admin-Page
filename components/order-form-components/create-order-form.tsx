@@ -51,7 +51,7 @@ const CreateOrderForm = ({ customers, products }: CreateOrderProps) => {
 
       await CreateNewOrder(order);
       setStatus("success");
-      setTimeout(() => router.push("/orders"), 3000);
+      setTimeout(() => router.push("/orders"), 1000);
     } catch (error) {
       console.error("Failed to create new order");
       setStatus("error");

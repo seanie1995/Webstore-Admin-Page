@@ -34,6 +34,7 @@ const CustomerSortSelect = ({
     { title: "customer.lastName", text: "Last Name" },
     { title: "customer.email", text: "Email" },
     { title: "id", text: "Order Id" },
+    { title: "orderDate", text: "Order Date" },
   ];
 
   const displaySortBy = isCustomerList ? customerSortBy : orderSortBy;
