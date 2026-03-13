@@ -1,31 +1,30 @@
-# Modern Web Store
+# Practice Store — Admin Dashboard
 
-A Webstore Admin Dashboard built with NextJS, and TypeScript. The store allows users to browse a product catalogue, filter and sort by various criteria and paginate through results.
+A web store admin dashboard built with **Next.js 16**, **TypeScript**, and **Tailwind CSS v4**. Browse a product catalogue, filter by category, sort by price or title, and paginate through results, all state driven entirely by the URL.
 
 ---
 
 ## Personal Reflection
 
-As an aspiring frontend developer, I built this project to deepen my understanding of Next.js and its core features. My two main areas of focus were:
+I built this project to deepen my understanding of Next.js and its core features. My two main areas of focus were:
 
-1. **URL-driven state management** — Rather than relying on `useState` or a client-side state library, I deliberately chose to represent all UI state (sorting, filtering, pagination, etc.) in the URL via `searchParams`. This keeps the application shareable and bookmarkable, and forces a clear separation between what drives the UI and how it is rendered.
+1. **URL-driven state management** — Rather than relying on `useState` or a client-side state library, I deliberately chose to represent all UI state (sorting, filtering, pagination, etc.) in the URL via `searchParams`. This keeps the application shareable and bookmarkable, and forces a clean separation between what drives the UI and how it is rendered.
 
 2. **React Server Components** — I leaned into Next.js's server-first model and kept as much rendering on the server as possible, only dropping into client components where user interactivity demanded it.
 
-I also used the project as a hands-on opportunity to work with two different sources of "live" data: a JSON database + middleware (as a mock backend) and Firestore (for persisting product likes).
+I also used the project as a hands-on opportunity to work with two different data sources: a `json-server` mock REST API (with custom middleware) and Firebase / Firestore (for persisting Orders and Customers, and handling admin authentication).
 
-The application has known rough edges. Error handling is minimal, the category-filtering logic has some bugs, and the design is fairly bare-bones. These are acknowledged limitations; the goal of this project was deliberate practice on state management and data-fetching patterns rather than building a polished product.
+> **Known limitations:** error handling is minimal and the category-filtering logic has some bugs. The goal was deliberate practice on state management and data-fetching patterns, not a production-ready product.
 
 ---
 
 ## Features
 
-- 🛍️ **Product catalogue** — browse products fetched from a REST API
+- 🛍️ **Product catalogue** — browse products fetched from a mock REST API
 - 🔍 **Filtering** — filter products by category
 - ↕️ **Sorting** — sort by price or title, ascending or descending
 - 📄 **Pagination** — navigate through pages of results
 - 🔢 **Configurable page size** — choose how many products to display at once
-- ❤️ **Like button** — like individual products, persisted to Firestore
 - 🔗 **URL-driven state** — all filter, sort, and pagination state lives in the URL
 
 ---
@@ -37,7 +36,10 @@ The application has known rough edges. Error handling is minimal, the category-f
 | [Next.js 16](https://nextjs.org/) | Full-stack React framework (App Router) |
 | [TypeScript](https://www.typescriptlang.org/) | Type safety across the codebase |
 | [Tailwind CSS v4](https://tailwindcss.com/) | Utility-first styling |
-| [Firebase / Firestore](https://firebase.google.com/) | Persistent storage for Customer and Order data |
+| [Firebase / Firestore](https://firebase.google.com/) | Persistent storage for Order and Customer objects. Admin Authentication and Authorization via Firebase auth |
+| [json-server](https://github.com/typicode/json-server) | Mock REST API with custom middleware |
+| [Biome](https://biomejs.dev/) | Linting and formatting |
+| [Lucide React](https://lucide.dev/) | Icon library |
 
 ---
 
@@ -53,19 +55,34 @@ The application has known rough edges. Error handling is minimal, the category-f
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd Webstore-Admin-Page
+cd Practice-Store
 
 # Install dependencies
 npm install
 ```
 
-### Running locally
+### Environment Variables
+
+Copy `.env.development` and fill in your Firebase credentials before running the app.
+
+### Running Locally
 
 ```bash
+# Start Next.js dev server + mock REST API (json-server) concurrently
 npm run dev:full
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
----
+### Other Useful Scripts
 
+| Script | Description |
+|---|---|
+| `npm run dev` | Next.js dev server only |
+| `npm run dev:full` | Next.js dev server + mock REST API (json-server) concurrently |
+| `npm run mock-server` | json-server mock API only (port 4000) |
+| `npm run build` | Production build |
+| `npm run lint` | Lint with Biome |
+| `npm run format` | Auto-format with Biome |
+
+---
