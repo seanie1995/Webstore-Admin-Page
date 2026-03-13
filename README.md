@@ -53,7 +53,7 @@ The application has known rough edges. Error handling is minimal, the category-f
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd modern-web-store
+cd Webstore-Admin-Page
 
 # Install dependencies
 npm install
