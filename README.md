@@ -1,4 +1,4 @@
-# Practice Store — Admin Dashboard
+# Webstore Admin Dashboard
 
 A web store admin dashboard built with **Next.js 16**, **TypeScript**, and **Tailwind CSS v4**. Browse a product catalogue, filter by category, sort by price or title, and paginate through results, all state driven entirely by the URL.
 
