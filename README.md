@@ -20,12 +20,15 @@ I also used the project as a hands-on opportunity to work with two different dat
 
 ## Features
 
-- 🛍️ **Product catalogue** — browse products fetched from a mock REST API
-- 🔍 **Filtering** — filter products by category
-- ↕️ **Sorting** — sort by price or title, ascending or descending
-- 📄 **Pagination** — navigate through pages of results
-- 🔢 **Configurable page size** — choose how many products to display at once
-- 🔗 **URL-driven state** — all filter, sort, and pagination state lives in the URL
+- 🛍️ **Product catalogue** - browse products fetched from a mock REST API
+- 👥 **Customer catalogue** - browse customers fetched from Firestore
+- 🧾 **Orders cataologue** - browse through all orders fetched from Firestore
+- 🔍 **Filtering** - filter products by category
+- ↕️ **Sorting** - sort by price or title, ascending or descending
+- 📄 **Pagination** - navigate through pages of results
+- 🔢 **Configurable page size** - choose how many products to display at once
+- 🔗 **URL-driven state** - all filter, sort, and pagination state lives in the URL
+- 🛠 **CRUD Operations** - create, read, update and delete customers, products and objects
 
 ---
 
