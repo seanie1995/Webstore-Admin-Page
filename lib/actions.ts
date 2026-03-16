@@ -100,8 +100,6 @@ export const CreateProduct = async (formData: FormData) => {
     availabilityStatus,
   };
 
-  console.log(newProduct);
-
   const res = await fetch(`${API_URL}/products`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -162,7 +160,7 @@ export const UpdateProduct = async (formData: FormData) => {
   const data = await res.json();
 
   revalidatePath("/products");
-  redirect("/");
+  redirect("/products");
 };
 
 export async function UpdateProductBind(id: string, formData: FormData) {

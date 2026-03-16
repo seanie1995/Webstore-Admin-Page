@@ -11811,8 +11811,8 @@
       "thumbnail": "https://www.google.com",
       "price": 499,
       "categoryId": 25,
-      "stock": 15,
-      "availabilityStatus": "Low Stock",
+      "stock": 0,
+      "availabilityStatus": "Out of Stock",
       "meta": {
         "createdAt": "2026-03-04T10:12:52.963Z",
         "updatedAt": "2026-03-04T10:12:52.963Z"
@@ -11821,11 +11821,11 @@
       "sku": "HOM-SON-PLA-196"
     },
     {
-      "title": "Tree Revenants",
+      "title": "Plastic Knights",
       "brand": "Games Workshop",
       "description": "Plastic Miniatures",
       "thumbnail": "https://www.google.com",
-      "price": 399,
+      "price": 299,
       "categoryId": 26,
       "stock": 35,
       "availabilityStatus": "In Stock",
