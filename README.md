@@ -43,6 +43,15 @@ I also used the project as a hands-on opportunity to work with two different dat
 
 ---
 
+## Screenshots
+
+![Screenshot of the application](images/ProductPage.png)
+
+![Screenshot of the application](images/OrderPage.png)
+
+![Screenshot of the application](images/OrderForm.png)
+---
+
 ## Getting Started
 
 ### Prerequisites
